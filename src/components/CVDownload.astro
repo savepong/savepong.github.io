@@ -1,0 +1,29 @@
+---
+// CV Download Section
+---
+
+<section id="cv" class="section-screen scroll-mt-28 py-10">
+    <div class="rounded-3xl p-1 bg-gradient-to-r from-slate-100 to-white shadow-sm max-w-3xl mx-auto w-full">
+        <div class="bg-white/80 backdrop-blur-md rounded-[20px] p-8 border border-slate-100 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left hover:shadow-md transition-shadow">
+            <div class="flex flex-col md:flex-row items-center gap-6">
+                <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-3xl text-slate-600 shadow-inner">
+                    <i class="far fa-file-pdf text-slate-600"></i>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold text-[#1d1d1f] mb-1">Curriculum Vitae</h3>
+                    <p class="text-slate-500 text-sm max-w-md leading-relaxed">Download complete professional background & technical specifications.</p>
+                </div>
+            </div>
+            <button id="download-cv-btn" class="group flex items-center gap-3 px-8 py-4 bg-[#1d1d1f] text-white rounded-full font-semibold text-sm hover:bg-[#0071e3] transition-all shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5 active:scale-95">
+                <span>Download PDF</span>
+                <i class="fas fa-arrow-down text-xs group-hover:animate-bounce"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById('download-cv-btn')?.addEventListener('click', () => {
+        window.print();
+    });
+</script>

@@ -1,0 +1,36 @@
+---
+// Skills Section
+const skillCategories = [
+    {
+        icon: "fas fa-brain",
+        title: "AI & Innovation",
+        skills: ["Claude Code", "OpenAI API", "Gemini Models"]
+    },
+    {
+        icon: "fas fa-cloud",
+        title: "Cloud",
+        skills: ["AWS", "Azure", "GCP"]
+    }
+];
+---
+
+<section id="tech" class="section-screen scroll-mt-28">
+    <h2 class="text-3xl font-bold mb-12 text-[#1d1d1f] tracking-tight text-center">Skills</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto w-full">
+        {skillCategories.map(category => (
+            <div class="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm hover:shadow-md transition-all duration-300 group">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 border border-slate-200">
+                        <i class={`${category.icon} text-lg text-slate-600`}></i>
+                    </div>
+                    <h4 class="font-bold text-lg text-[#1d1d1f]">{category.title}</h4>
+                </div>
+                <div class="flex flex-wrap gap-2.5">
+                    {category.skills.map(skill => (
+                        <span class="px-4 py-2 bg-white/80 border border-white/50 rounded-full text-xs font-medium text-slate-700 shadow-sm hover:scale-105 transition-transform cursor-default">{skill}</span>
+                    ))}
+                </div>
+            </div>
+        ))}
+    </div>
+</section>

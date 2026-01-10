@@ -1,0 +1,179 @@
+---
+// AI Chat Component - Floating chat panel with Gemini integration
+// API key is loaded from environment variables for security
+---
+
+<!-- FLOATING AI WIDGET -->
+<div id="floating-chat-btn" class="floating-btn">
+    <!-- Gemini SVG Icon -->
+    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+    </svg>
+</div>
+
+<div id="floating-chat-panel" class="floating-chat-panel">
+    <div class="p-4 border-b border-slate-100/50 flex justify-between items-center bg-white/60 backdrop-blur-md">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-lg">
+                <!-- Gemini SVG Icon -->
+                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div>
+                <h3 class="font-bold text-sm">Gemini Assistant</h3>
+                <p class="text-[10px] text-slate-500 font-medium">Model 2.5 Flash</p>
+            </div>
+        </div>
+        <button id="close-chat-btn" class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-500 transition-colors">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div id="chat-container" class="flex-1 p-4 overflow-y-auto chat-container flex flex-col gap-2 bg-transparent">
+        <div class="chat-bubble-ai shadow-sm text-sm">Hello! I am Pongsiri's AI assistant. Ask me anything.</div>
+    </div>
+    <div class="p-4 bg-white/50 border-t border-slate-100/50 backdrop-blur-sm">
+        <div class="relative">
+            <input type="text" id="chat-input" placeholder="Type a message..." class="w-full bg-white border-none rounded-full py-3 px-5 text-sm focus:ring-2 focus:ring-slate-300 outline-none transition-all placeholder-slate-400 shadow-sm">
+            <button id="send-btn" class="absolute right-1 top-1 w-8 h-8 bg-slate-800 text-white rounded-full flex items-center justify-center hover:bg-black transition-colors shadow-md mt-0.5">
+                <i class="fas fa-arrow-up text-xs"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Ask My AI Section -->
+<section id="ai" class="min-h-screen flex flex-col justify-center items-center relative py-20">
+    <div class="text-center mb-10">
+        <h3 class="text-4xl font-bold text-[#1d1d1f] mb-4">Ask My AI</h3>
+        <p class="text-lg text-slate-500 font-light">Powered by Gemini 2.5 Flash.</p>
+    </div>
+    <div class="max-w-2xl mx-auto w-full">
+        <div class="relative group">
+            <input type="text" id="chat-input-bento" placeholder="Ask anything about Pongsiri..." class="w-full bg-white/60 backdrop-blur-xl border border-white/60 rounded-2xl px-6 py-5 text-base focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50/50 shadow-sm transition-all">
+            <button id="open-chat-from-bento" class="absolute right-3 top-3 bg-black text-white rounded-xl w-12 h-12 flex items-center justify-center hover:bg-[#0071e3] transition-colors shadow-md">
+                <i class="fas fa-arrow-right text-sm"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<script define:vars={{ apiKey: import.meta.env.PUBLIC_GEMINI_API_KEY || '' }}>
+    // CV Context for AI
+    const cvContext = `
+    Pongsiri Pisutakarathada (savepong). 
+    Current Roles: CTO & Co-founder at Code Passion, President of Thai Programmer Association (200k+ members).
+    Experience: 
+    - Lead Software Engineer at LSEG/Refinitiv (Managed 20 engineers, MS365 integration).
+    - Senior Developer at Course Square (LMS, API Gateway).
+    - CTO at Ideagital Co., Ltd. (2016-2021) - Managed cloud infra, web apps.
+    - Lead Software Engineer at Jinue Global (2015-2016) - E-commerce & stock systems.
+    - Computer Teacher at Dusit Commercial College (2012-2016) - IT Consultancy.
+    
+    Projects:
+    - WorkEngine: AI operational platform.
+    - Sekweb.site: AI website builder.
+    - Thai Survive: Donation/Crisis management (COVID/Flood).
+    - Forenext: Enterprise LMS.
+
+    Skills: AI Integration (Claude Code, Gemini, OpenAI), Cloud (AWS, Azure, GCP, Alibaba), TypeScript, Node.js, React, Vue.
+    Achievements: Signed MOU with Alibaba Cloud, Speaker at Microsoft Build & Google I/O.
+    Education: MBA (Strategic Management), BBA (Information Systems - First Class Honors), WCAG 2.2 Certified, Azure Fundamentals.
+    `;
+
+    // Toggle Chat Function
+    function toggleChat() {
+        const panel = document.getElementById('floating-chat-panel');
+        const btn = document.getElementById('floating-chat-btn');
+        panel?.classList.toggle('active');
+        btn?.classList.toggle('active');
+    }
+
+    // Gemini API Call
+    async function callGemini(prompt: string, systemInstruction: string): Promise<string> {
+        if (!apiKey) {
+            return "API key not configured. Please set PUBLIC_GEMINI_API_KEY in your .env file.";
+        }
+        
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }],
+            systemInstruction: { parts: [{ text: systemInstruction }] }
+        };
+        
+        for (let i = 0; i < 3; i++) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error('API Error');
+                const result = await response.json();
+                return result.candidates?.[0]?.content?.parts?.[0]?.text || "No response.";
+            } catch (e) {
+                if (i === 2) return "Connection issue. Please try again.";
+                await new Promise(r => setTimeout(r, 1000));
+            }
+        }
+        return "Connection issue. Please try again.";
+    }
+
+    // Add bubble to chat
+    function addBubble(text: string, type: 'user' | 'ai', id: string | null = null) {
+        const chatContainer = document.getElementById('chat-container');
+        const div = document.createElement('div');
+        div.className = type === 'user' ? "chat-bubble-user" : "chat-bubble-ai";
+        if (id) div.id = id;
+        div.innerHTML = text.replace(/\n/g, '<br>');
+        chatContainer?.appendChild(div);
+        if (chatContainer) chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    // Handle chat submission
+    async function handleChat() {
+        const chatInput = document.getElementById('chat-input') as HTMLInputElement;
+        const text = chatInput?.value.trim();
+        if (!text) return;
+        
+        addBubble(text, 'user');
+        chatInput.value = '';
+        
+        const loadingId = 'loading-' + Date.now();
+        addBubble('<i class="fas fa-circle-notch fa-spin"></i> Thinking...', 'ai', loadingId);
+        
+        const systemPrompt = `You are Pongsiri's AI assistant. Answer briefly and professionally in Thai. Context: ${cvContext}`;
+        const response = await callGemini(text, systemPrompt);
+        
+        const loadingEl = document.getElementById(loadingId);
+        if (loadingEl) loadingEl.remove();
+        addBubble(response, 'ai');
+    }
+
+    // Prefill and open chat
+    function prefillChat(text: string) {
+        const chatInput = document.getElementById('chat-input') as HTMLInputElement;
+        if (chatInput) chatInput.value = text;
+        handleChat();
+    }
+
+    // Event listeners
+    document.getElementById('floating-chat-btn')?.addEventListener('click', toggleChat);
+    document.getElementById('close-chat-btn')?.addEventListener('click', toggleChat);
+    document.getElementById('send-btn')?.addEventListener('click', handleChat);
+    document.getElementById('chat-input')?.addEventListener('keypress', (e) => {
+        if ((e as KeyboardEvent).key === 'Enter') handleChat();
+    });
+
+    document.getElementById('open-chat-from-bento')?.addEventListener('click', () => {
+        toggleChat();
+    });
+
+    document.getElementById('chat-input-bento')?.addEventListener('keypress', (e) => {
+        if ((e as KeyboardEvent).key === 'Enter') {
+            const input = e.target as HTMLInputElement;
+            prefillChat(input.value);
+            toggleChat();
+        }
+    });
+</script>

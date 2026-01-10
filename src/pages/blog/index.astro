@@ -1,0 +1,52 @@
+---
+// Blog index page
+import Layout from '@/layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog');
+const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<Layout title="Blog | Pongsiri P.">
+    <div class="min-h-screen pt-24 pb-16 px-6">
+        <div class="max-w-4xl mx-auto">
+            <a href="/" class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors mb-8">
+                <i class="fas fa-arrow-left"></i>
+                Back to Home
+            </a>
+            
+            <h1 class="text-4xl md:text-5xl font-bold text-[#1d1d1f] mb-4">Blog</h1>
+            <p class="text-lg text-slate-500 mb-12">Thoughts on technology, leadership, and building products.</p>
+            
+            <div class="space-y-8">
+                {sortedPosts.length === 0 ? (
+                    <div class="text-center py-20 text-slate-400">
+                        <i class="fas fa-pen-fancy text-4xl mb-4"></i>
+                        <p>No posts yet. Check back soon!</p>
+                    </div>
+                ) : (
+                    sortedPosts.map(post => (
+                        <article class="group">
+                            <a href={`/blog/${post.slug}`} class="block p-6 rounded-2xl bg-white/60 backdrop-blur-xl border border-white/60 hover:bg-white/90 hover:shadow-lg transition-all">
+                                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
+                                    <h2 class="text-xl font-bold text-[#1d1d1f] group-hover:text-[#0071e3] transition-colors">{post.data.title}</h2>
+                                    <time class="text-sm text-slate-400 font-medium">
+                                        {new Date(post.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                                    </time>
+                                </div>
+                                <p class="text-slate-600 leading-relaxed">{post.data.description}</p>
+                                {post.data.tags && (
+                                    <div class="flex flex-wrap gap-2 mt-4">
+                                        {post.data.tags.map((tag: string) => (
+                                            <span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">{tag}</span>
+                                        ))}
+                                    </div>
+                                )}
+                            </a>
+                        </article>
+                    ))
+                )}
+            </div>
+        </div>
+    </div>
+</Layout>

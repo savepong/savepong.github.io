@@ -1,0 +1,50 @@
+---
+// Education & Credentials Section
+const academics = [
+    { degree: "M.B.A.", school: "Rattana Bundit University • 2021" },
+    { degree: "B.B.A. Info Systems", school: "Rajamangala University • First-Class Honors" }
+];
+
+const certifications = [
+    { icon: "fas fa-universal-access", title: "WCAG 2.2 for Web Developers", issuer: "Udemy • Dec 2024" },
+    { icon: "fab fa-microsoft", title: "Azure Fundamentals", issuer: "Microsoft • 2023" },
+    { icon: "fas fa-tasks", title: "SAFe® 5 Agilist", issuer: "Scaled Agile • 2021" }
+];
+---
+
+<section id="education" class="section-screen scroll-mt-28">
+    <h2 class="text-3xl font-bold mb-12 text-[#1d1d1f] tracking-tight text-center">Education & Credentials</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto w-full">
+        <div class="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm">
+            <h3 class="text-lg font-bold text-[#1d1d1f] mb-6 flex items-center gap-2">
+                <i class="fas fa-graduation-cap text-slate-600"></i> Academic
+            </h3>
+            <div class="space-y-6">
+                {academics.map(edu => (
+                    <div>
+                        <h4 class="text-base font-bold text-[#1d1d1f]">{edu.degree}</h4>
+                        <p class="text-slate-500 text-sm">{edu.school}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+        <div class="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm">
+            <h3 class="text-lg font-bold text-[#1d1d1f] mb-6 flex items-center gap-2">
+                <i class="fas fa-certificate text-slate-600"></i> Certifications
+            </h3>
+            <div class="space-y-4">
+                {certifications.map(cert => (
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-slate-600">
+                            <i class={`${cert.icon} text-slate-600`}></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-[#1d1d1f] text-sm">{cert.title}</h4>
+                            <p class="text-xs text-slate-500">{cert.issuer}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    </div>
+</section>

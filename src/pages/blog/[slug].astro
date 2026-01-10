@@ -1,0 +1,112 @@
+---
+// Blog post page template
+import Layout from '@/layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+    const posts = await getCollection('blog');
+    return posts.map(post => ({
+        params: { slug: post.slug },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<Layout title={`${post.data.title} | Pongsiri P.`} description={post.data.description}>
+    <article class="min-h-screen pt-24 pb-16 px-6">
+        <div class="max-w-3xl mx-auto">
+            <a href="/blog" class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors mb-8">
+                <i class="fas fa-arrow-left"></i>
+                Back to Blog
+            </a>
+            
+            <header class="mb-12">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1d1d1f] mb-4 leading-tight">{post.data.title}</h1>
+                <div class="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+                    <time>
+                        {new Date(post.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    </time>
+                    {post.data.author && (
+                        <span>by {post.data.author}</span>
+                    )}
+                </div>
+                {post.data.tags && (
+                    <div class="flex flex-wrap gap-2 mt-6">
+                        {post.data.tags.map((tag: string) => (
+                            <span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">{tag}</span>
+                        ))}
+                    </div>
+                )}
+            </header>
+            
+            <div class="prose prose-lg prose-slate max-w-none">
+                <Content />
+            </div>
+        </div>
+    </article>
+</Layout>
+
+<style is:global>
+    .prose {
+        color: #334155;
+        line-height: 1.8;
+    }
+    .prose h2 {
+        color: #1d1d1f;
+        font-weight: 700;
+        margin-top: 2em;
+        margin-bottom: 1em;
+    }
+    .prose h3 {
+        color: #1d1d1f;
+        font-weight: 600;
+        margin-top: 1.5em;
+        margin-bottom: 0.75em;
+    }
+    .prose p {
+        margin-bottom: 1.5em;
+    }
+    .prose a {
+        color: #0071e3;
+        text-decoration: none;
+    }
+    .prose a:hover {
+        text-decoration: underline;
+    }
+    .prose code {
+        background: #f1f5f9;
+        padding: 0.2em 0.4em;
+        border-radius: 0.25em;
+        font-size: 0.9em;
+    }
+    .prose pre {
+        background: #1e293b;
+        padding: 1.5em;
+        border-radius: 1em;
+        overflow-x: auto;
+    }
+    .prose pre code {
+        background: transparent;
+        padding: 0;
+        color: #e2e8f0;
+    }
+    .prose blockquote {
+        border-left: 4px solid #0071e3;
+        padding-left: 1em;
+        color: #64748b;
+        font-style: italic;
+    }
+    .prose ul, .prose ol {
+        padding-left: 1.5em;
+    }
+    .prose li {
+        margin-bottom: 0.5em;
+    }
+    .prose img {
+        border-radius: 1em;
+        margin: 2em 0;
+    }
+</style>

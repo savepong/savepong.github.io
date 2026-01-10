@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Navbar from '../components/Navbar.astro';
+import Hero from '../components/Hero.astro';
+import BentoGrid from '../components/BentoGrid.astro';
+import Experiences from '../components/Experiences.astro';
+import Projects from '../components/Projects.astro';
+import Skills from '../components/Skills.astro';
+import Education from '../components/Education.astro';
+import CVDownload from '../components/CVDownload.astro';
+import AIChat from '../components/AIChat.astro';
+---
+
+<Layout title="Pongsiri P. | Architecting the Future">
+    <Navbar />
+    
+    <Hero />
+    
+    <AIChat />
+    
+    <BentoGrid />
+    
+    <!-- DETAILED CONTENT SECTIONS -->
+    <div class="bg-white/70 backdrop-blur-3xl border-t border-white/40">
+        <div class="max-w-4xl mx-auto px-6 py-24">
+            <Experiences />
+            <Projects />
+            <Skills />
+            <Education />
+            <CVDownload />
+        </div>
+    </div>
+</Layout>

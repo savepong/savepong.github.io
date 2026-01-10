@@ -1,0 +1,100 @@
+---
+// Experiences Timeline Section
+const experiences = [
+    {
+        title: "President",
+        period: "Oct 2023 – Present",
+        company: "Thai Programmer Association (TPA)",
+        points: [
+            "Organizational Leadership: Provide strategic vision and governance for a professional network of 200,000+ members, fostering the growth of the Thai developer ecosystem.",
+            "Strategic Alliances: Orchestrated a formal Memorandum of Understanding (MOU) with <strong>Alibaba Cloud</strong> to facilitate resource accessibility and maintain collaborative partnerships with government entities (DEPA, NIA).",
+            "National Initiatives: Spearheaded major initiatives such as \"National Coding Day\" and specialized AI symposiums to maintain Thailand's competitive standing globally."
+        ]
+    },
+    {
+        title: "Chief Technology Officer & Co-founder",
+        period: "Jan 2020 – Present",
+        company: "Code Passion Co., Ltd.",
+        points: [
+            "Technology Strategy: Formulate the long-term technological roadmap, ensuring the adoption of industry-leading tools and methodologies.",
+            "Platform Innovation (WorkEngine): Directed the development of WorkEngine, an advanced operational management platform leveraging AI to streamline organizational workflows.",
+            "R&D Leadership: Conduct ongoing research into Generative AI applications to enhance enterprise product functionality and user experience."
+        ]
+    },
+    {
+        title: "Lead Software Engineer",
+        period: "Oct 2021 – Present",
+        company: "London Stock Exchange Group (LSEG)",
+        points: [
+            "Engineering Leadership: Oversee a multi-disciplinary team of 20 engineers in the delivery of critical financial software utilized by global professionals.",
+            "Systems Integration: Architected the integration of Refinitiv data assets with Microsoft 365 and Google Workspace environments, enhancing data accessibility and interoperability."
+        ]
+    },
+    {
+        title: "Senior Software Engineer",
+        period: "Jan 2021 – Oct 2021",
+        company: "Refinitiv Software (Thailand) Co., Ltd.",
+        points: [
+            "Implemented enterprise applications for Microsoft Office 365 Platforms using TypeScript, LitElement, AngularJS, and Node.js."
+        ]
+    },
+    {
+        title: "Senior Software Developer",
+        period: "Apr 2019 – Jan 2021",
+        company: "Course Square Co., Ltd.",
+        points: [
+            "Software Optimization: Implemented architectural refinements and standardized codebases to maximize system performance and reusability across multiple projects.",
+            "Infrastructure Management: Established a Kong API Gateway to ensure robust security and facilitate scalable system growth."
+        ]
+    },
+    {
+        title: "CTO & Co-founder",
+        period: "Apr 2016 – Jan 2021",
+        company: "Ideagital Co., Ltd.",
+        points: [
+            "Operational Management: Assigned and oversaw daily tasks of technical team members.",
+            "Web Development: Developed web applications using Laravel, CodeIgniter, PhalconPHP, MySQL, MongoDB, Ionic, and WordPress."
+        ]
+    },
+    {
+        title: "Lead Software Engineer",
+        period: "Mar 2015 – Jan 2016",
+        company: "Jinue Global Co., Ltd.",
+        points: [
+            "E-Commerce Development: Developed comprehensive e-commerce websites and stock management systems using PHP, MySQL, and Git."
+        ]
+    },
+    {
+        title: "Computer & Programming Teacher",
+        period: "May 2012 – Aug 2016",
+        company: "Dusit Commercial College",
+        points: [
+            "Pedagogy: Taught subjects including Computer Programming, Network Systems, and Database Administration.",
+            "System Development: Developed and deployed a custom Classroom Management System."
+        ]
+    }
+];
+---
+
+<section id="journey" class="section-screen scroll-mt-28">
+    <h2 class="text-3xl font-bold mb-12 text-[#1d1d1f] tracking-tight text-center">Experiences</h2>
+    
+    <div class="timeline-container max-w-2xl mx-auto w-full">
+        {experiences.map((exp, index) => (
+            <div class="timeline-item">
+                {index < experiences.length - 1 && <div class="timeline-line"></div>}
+                <div class="timeline-dot"></div>
+                <div class="flex flex-col md:flex-row md:justify-between md:items-baseline mb-2">
+                    <h3 class="text-xl font-bold text-[#1d1d1f]">{exp.title}</h3>
+                    <span class="text-sm text-slate-400 font-medium">{exp.period}</span>
+                </div>
+                <div class="text-sm text-[#0071e3] font-semibold mb-4">{exp.company}</div>
+                <ul class="space-y-3 text-slate-600 leading-relaxed text-sm list-disc list-outside ml-4">
+                    {exp.points.map(point => (
+                        <li set:html={point}></li>
+                    ))}
+                </ul>
+            </div>
+        ))}
+    </div>
+</section>

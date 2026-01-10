@@ -1,0 +1,113 @@
+---
+// Bento Grid Section - Executive Summary
+---
+
+<div id="work" class="section-screen relative">
+    <div class="bento-grid">
+        
+        <!-- ROW 1 & 2 Left: CORE IDENTITY (Anchor Card - 2x2) -->
+        <div class="bento-card col-span-2 row-span-2 p-8 flex flex-col justify-between h-full min-h-[340px] hover:shadow-lg transition-all group">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Current Focus</h3>
+                    <h2 class="text-2xl font-bold text-[#1d1d1f] mb-1">Strategic Leadership</h2>
+                </div>
+                <div class="p-3 bg-slate-100 rounded-full text-slate-600 transition-colors">
+                    <i class="far fa-chess-king text-xl text-slate-600"></i>
+                </div>
+            </div>
+            
+            <div class="space-y-8 mt-4">
+                <div class="flex items-start gap-5">
+                    <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 border border-slate-200">
+                        <i class="fas fa-flag text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#1d1d1f] text-lg">President, TPA</h4>
+                        <p class="text-sm text-slate-500 leading-relaxed mt-1">Leading 200k+ devs. Driving national digital policy with DEPA & Alibaba Cloud.</p>
+                    </div>
+                </div>
+                <div class="flex items-start gap-5">
+                    <div class="w-12 h-12 rounded-2xl bg-[#1d1d1f] text-white flex items-center justify-center shrink-0 border border-slate-200 shadow-md">
+                        <i class="fas fa-rocket text-lg"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#1d1d1f] text-lg">CTO, Code Passion</h4>
+                        <p class="text-sm text-slate-500 leading-relaxed mt-1">Building AI platforms (WorkEngine) & Enterprise R&D strategies.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROW 1 Right: Global Experience (2x1) -->
+        <div class="bento-card col-span-2 p-8 flex flex-row justify-between items-center hover:bg-black hover:text-white transition-all group min-h-[160px]">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="text-[10px] font-bold uppercase tracking-wide opacity-60 bg-slate-100 px-2 py-1 rounded text-slate-600 group-hover:bg-white/20 group-hover:text-white">Global Scale</span>
+                </div>
+                <h3 class="text-2xl font-bold mb-1">LSEG</h3>
+                <p class="text-sm opacity-70 font-medium">Lead Software Engineer</p>
+                <p class="text-xs leading-relaxed opacity-90 mt-2 max-w-xs">Architecting financial data integration for world-class platforms.</p>
+            </div>
+            <div class="w-16 h-16 rounded-full bg-slate-50 group-hover:bg-white/20 flex items-center justify-center text-slate-600 group-hover:text-white transition-colors border border-slate-100 group-hover:border-white/10 shadow-sm">
+                <i class="fas fa-globe text-2xl"></i>
+            </div>
+        </div>
+
+        <!-- ROW 2 Right: TECHNICAL DNA (2x1) -->
+        <div class="bento-card col-span-2 justify-center min-h-[300px]">
+            <div class="flex items-center justify-between mb-4 px-2">
+                <h3 class="font-bold text-sm text-slate-700 uppercase tracking-wide">Technical DNA</h3>
+                <span class="text-[10px] bg-slate-100 px-2 py-1 rounded text-slate-500 font-medium">Balanced Profile</span>
+            </div>
+            <div class="h-[240px] w-full relative">
+                <canvas id="bentoRadarChart"></canvas>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Radar Chart initialization
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof Chart !== 'undefined') {
+            const canvas = document.getElementById('bentoRadarChart') as HTMLCanvasElement;
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                    new Chart(ctx, {
+                        type: 'radar',
+                        data: {
+                            labels: ['Strat', 'AI', 'Cloud', 'Dev', 'Lead', 'Prod'],
+                            datasets: [{
+                                data: [95, 95, 90, 85, 90, 95],
+                                backgroundColor: 'rgba(0, 0, 0, 0.05)',
+                                borderColor: '#1d1d1f',
+                                borderWidth: 2,
+                                pointBackgroundColor: '#fff',
+                                pointBorderColor: '#1d1d1f',
+                                pointRadius: 3
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                r: {
+                                    angleLines: { color: '#e5e5e5' },
+                                    grid: { color: '#e5e5e5' },
+                                    pointLabels: { font: { size: 9, family: 'Inter', weight: 600 }, color: '#86868b' },
+                                    suggestedMin: 50,
+                                    suggestedMax: 100,
+                                    ticks: { display: false }
+                                }
+                            },
+                            plugins: { legend: { display: false } }
+                        }
+                    });
+                }
+            }
+        }
+    });
+</script>

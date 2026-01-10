@@ -1,0 +1,57 @@
+---
+// Navbar Component
+---
+
+<nav id="navbar" class="fixed z-50 left-1/2 -translate-x-1/2 transition-all duration-700 ease-[cubic-bezier(0.25,0.8,0.25,1)] flex items-center justify-center text-xs font-semibold text-slate-500 tracking-wide overflow-x-auto no-scrollbar
+    top-6 w-auto max-w-[90vw] rounded-full px-6 py-3 gap-10 bg-white/80 backdrop-blur-xl saturate-150 border border-white/30 shadow-lg hover:shadow-xl hover:bg-white/95">
+    
+    <a href="#hero" class="hover:text-black transition-colors whitespace-nowrap relative group">
+        Profile
+        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+    </a>
+    <a href="#work" class="hover:text-black transition-colors whitespace-nowrap relative group">
+        Summary
+        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+    </a>
+    <a href="#journey" class="hover:text-black transition-colors whitespace-nowrap relative group">
+        Experiences
+        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+    </a>
+    <a href="#projects" class="hover:text-black transition-colors whitespace-nowrap relative group">
+        Projects
+        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+    </a>
+    <a href="#tech" class="hover:text-black transition-colors whitespace-nowrap relative group">
+        Skills
+        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+    </a>
+    <a href="#education" class="hover:text-black transition-colors whitespace-nowrap relative group">
+        Educations
+        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+    </a>
+    
+    <a href="#cv" class="hover:text-black transition-colors whitespace-nowrap relative group">
+        CV
+        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
+    </a>
+
+    <!-- Blog with Icon -->
+    <a href="/blog" class="hover:text-[#0071e3] transition-colors whitespace-nowrap pl-4 ml-2 font-medium text-slate-600 flex items-center gap-1.5">
+        Blog <i class="fas fa-external-link-alt text-[10px]"></i>
+    </a>
+</nav>
+
+<script>
+    // Navbar scroll behavior
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('navbar');
+        const scrollThreshold = 50; 
+        if (window.scrollY > scrollThreshold) {
+            nav?.classList.remove('top-6', 'w-auto', 'max-w-[90vw]', 'rounded-full', 'px-6', 'py-3', 'gap-8', 'bg-white/30', 'border-white/30', 'shadow-lg', 'hover:shadow-xl', 'hover:bg-white/40');
+            nav?.classList.add('top-0', 'w-full', 'max-w-full', 'rounded-none', 'px-10', 'py-4', 'gap-10', 'bg-white/60', 'backdrop-blur-3xl', 'saturate-150', 'border-b', 'border-slate-200/50', 'shadow-sm');
+        } else {
+            nav?.classList.add('top-6', 'w-auto', 'max-w-[90vw]', 'rounded-full', 'px-6', 'py-3', 'gap-8', 'bg-white/30', 'border-white/30', 'shadow-lg', 'hover:shadow-xl', 'hover:bg-white/40');
+            nav?.classList.remove('top-0', 'w-full', 'max-w-full', 'rounded-none', 'px-10', 'py-4', 'gap-10', 'bg-white/60', 'backdrop-blur-3xl', 'saturate-150', 'border-b', 'border-slate-200/50', 'shadow-sm');
+        }
+    });
+</script>
