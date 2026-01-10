@@ -8,7 +8,7 @@ const { title, description = "Pongsiri P. - Tech Executive, Community Leader, So
 ---
 
 <!DOCTYPE html>
-<html lang="th">
+<html lang="th" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,12 +28,16 @@ const { title, description = "Pongsiri P. - Tech Executive, Community Leader, So
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
 </head>
 <body class="font-inter bg-[#f5f5f7] text-primary antialiased overflow-x-hidden overflow-y-auto">
-    <!-- Modern Technologist Gradient Background -->
-    <div class="tech-bg"></div>
+    <!-- Modern Technologist Gradient Background with Parallax -->
+    <div class="tech-bg" id="parallax-bg"></div>
     
     <slot />
 
     <style is:global>
+        html {
+            scroll-behavior: smooth;
+        }
+
         :root {
             --bg-color: transparent;
             --card-bg: rgba(255, 255, 255, 0.65);
@@ -48,6 +52,7 @@ const { title, description = "Pongsiri P. - Tech Executive, Community Leader, So
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             z-index: -50;
+            will-change: transform;
             background-color: #f8fafc;
             background-image: 
                 radial-gradient(at 40% 20%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
@@ -205,6 +210,36 @@ const { title, description = "Pongsiri P. - Tech Executive, Community Leader, So
         /* No scrollbar utility */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Parallax utilities */
+        .parallax-visible {
+            opacity: 1 !important;
+        }
     </style>
+
+    <script>
+        // Background parallax effect
+        const parallaxBg = document.getElementById('parallax-bg');
+        let bgTicking = false;
+
+        function updateBackgroundParallax() {
+            if (parallaxBg) {
+                const scrollY = window.scrollY;
+                const translateY = scrollY * 0.15;
+                const scale = 1 + scrollY * 0.0001;
+                parallaxBg.style.transform = `translateY(${translateY}px) scale(${scale})`;
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!bgTicking) {
+                requestAnimationFrame(() => {
+                    updateBackgroundParallax();
+                    bgTicking = false;
+                });
+                bgTicking = true;
+            }
+        }, { passive: true });
+    </script>
 </body>
 </html>
