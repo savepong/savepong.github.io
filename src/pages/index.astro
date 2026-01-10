@@ -14,20 +14,133 @@ import AIChat from '../components/AIChat.astro';
 <Layout title="Pongsiri P. | Architecting the Future">
     <Navbar />
     
-    <Hero />
+    <section class="parallax-section" data-parallax-speed="0.3">
+        <Hero />
+    </section>
     
     <AIChat />
     
-    <BentoGrid />
+    <section class="parallax-section" data-parallax-speed="0.15">
+        <BentoGrid />
+    </section>
     
     <!-- DETAILED CONTENT SECTIONS -->
-    <div class="bg-white/70 backdrop-blur-3xl border-t border-white/40">
+    <div class="bg-white/70 backdrop-blur-3xl border-t border-white/40 relative overflow-hidden">
         <div class="max-w-4xl mx-auto px-6 py-24">
-            <Experiences />
-            <Projects />
-            <Skills />
-            <Education />
-            <CVDownload />
+            <section class="parallax-section" data-parallax-speed="0.1">
+                <Experiences />
+            </section>
+            <section class="parallax-section" data-parallax-speed="0.08">
+                <Projects />
+            </section>
+            <section class="parallax-section" data-parallax-speed="0.1">
+                <Skills />
+            </section>
+            <section class="parallax-section" data-parallax-speed="0.08">
+                <Education />
+            </section>
+            <section class="parallax-section" data-parallax-speed="0.05">
+                <CVDownload />
+            </section>
         </div>
     </div>
 </Layout>
+
+<style>
+    .parallax-section {
+        will-change: transform, opacity;
+        transition: transform 0.1s ease-out, opacity 0.3s ease-out;
+    }
+</style>
+
+<script>
+    // Parallax Scroll Controller
+    class ParallaxController {
+        private sections: HTMLElement[];
+        private ticking: boolean = false;
+
+        constructor() {
+            this.sections = Array.from(document.querySelectorAll('.parallax-section'));
+            this.init();
+        }
+
+        private init() {
+            // Initial state - add fade-in class
+            this.sections.forEach((section) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(60px)';
+            });
+
+            // Setup Intersection Observer for fade-in animations
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            const section = entry.target as HTMLElement;
+                            section.style.opacity = '1';
+                            section.style.transform = 'translateY(0)';
+                            section.classList.add('parallax-visible');
+                        }
+                    });
+                },
+                {
+                    threshold: 0.1,
+                    rootMargin: '0px 0px -50px 0px'
+                }
+            );
+
+            this.sections.forEach((section) => observer.observe(section));
+
+            // Parallax scroll effect
+            window.addEventListener('scroll', () => this.onScroll(), { passive: true });
+        }
+
+        private onScroll() {
+            if (!this.ticking) {
+                requestAnimationFrame(() => {
+                    this.updateParallax();
+                    this.ticking = false;
+                });
+                this.ticking = true;
+            }
+        }
+
+        private updateParallax() {
+            const scrollY = window.scrollY;
+            const windowHeight = window.innerHeight;
+
+            this.sections.forEach((section) => {
+                if (!section.classList.contains('parallax-visible')) return;
+
+                const rect = section.getBoundingClientRect();
+                const sectionTop = rect.top + scrollY;
+                const sectionCenter = sectionTop + rect.height / 2;
+                const viewportCenter = scrollY + windowHeight / 2;
+                
+                // Calculate how far the section is from viewport center
+                const distance = (sectionCenter - viewportCenter) / windowHeight;
+                
+                // Get parallax speed from data attribute
+                const speed = parseFloat(section.dataset.parallaxSpeed || '0.1');
+                
+                // Apply subtle parallax transform
+                const translateY = distance * speed * 100;
+                const scale = 1 - Math.abs(distance) * 0.02; // Subtle scale effect
+                const opacity = 1 - Math.abs(distance) * 0.15; // Subtle fade effect
+                
+                section.style.transform = `translateY(${translateY}px) scale(${Math.max(0.95, scale)})`;
+                section.style.opacity = String(Math.max(0.7, Math.min(1, opacity)));
+            });
+        }
+    }
+
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', () => {
+        new ParallaxController();
+    });
+
+    // Re-initialize on Astro page transitions
+    document.addEventListener('astro:page-load', () => {
+        new ParallaxController();
+    });
+</script>
