@@ -71,18 +71,123 @@ A modern personal portfolio website built with [Astro](https://astro.build), fea
 
 ## 📝 Adding Blog Posts
 
-Create a new `.md` file in `src/content/blog/`:
+The blog feature allows you to create posts by simply adding Markdown files. The site automatically builds and deploys when you push changes to the `master` branch.
 
-```markdown
----
-title: "Your Post Title"
-description: "A brief description"
-pubDate: 2026-01-10
-tags: ["tag1", "tag2"]
----
+### Quick Start
 
-Your content here...
+1. **Create a new Markdown file** in `src/content/blog/`:
+   ```bash
+   # Use the template as a starting point
+   cp src/content/blog/_template.md src/content/blog/my-new-post.md
+   ```
+
+2. **Edit the frontmatter** with your post details:
+   ```yaml
+   ---
+   title: "Your Post Title"
+   description: "A brief description of your post (1-2 sentences)"
+   pubDate: 2026-01-18
+   updatedDate: 2026-01-18  # Optional: for updated posts
+   author: "Pongsiri P."     # Optional: defaults to "Pongsiri P."
+   heroImage: "/assets/img/blog/post-image.jpg"  # Optional
+   tags: ["tag1", "tag2"]    # Optional: for categorization
+   ---
+   ```
+
+3. **Write your content** using Markdown:
+   ```markdown
+   # Your Post Title
+   
+   Introduction paragraph...
+   
+   ## Section 1
+   
+   Your content here with **bold**, *italic*, and `code`.
+   
+   ```javascript
+   // Code blocks with syntax highlighting
+   const greeting = "Hello, World!";
+   ```
+   
+   ## Section 2
+   
+   More content...
+   ```
+
+4. **Commit and push**:
+   ```bash
+   git add src/content/blog/my-new-post.md
+   git commit -m "Add new blog post: Your Post Title"
+   git push origin master
+   ```
+
+5. **Automatic deployment**: GitHub Actions will automatically build and deploy your site to GitHub Pages.
+
+### Frontmatter Fields
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `title` | string | ✅ Yes | The title of your blog post |
+| `description` | string | ✅ Yes | A brief summary (shown in listings and meta tags) |
+| `pubDate` | date | ✅ Yes | Publication date in YYYY-MM-DD format |
+| `updatedDate` | date | ❌ No | Last updated date (shows if different from pubDate) |
+| `author` | string | ❌ No | Author name (defaults to "Pongsiri P.") |
+| `heroImage` | string | ❌ No | Path to header image for the post |
+| `tags` | array | ❌ No | List of tags for categorization |
+
+### Markdown Features
+
+Your blog posts support full Markdown syntax with enhanced features:
+
+- **Headings**: Use `#` for h1, `##` for h2, etc.
+- **Emphasis**: `*italic*` or `**bold**`
+- **Code**: Inline `code` or fenced code blocks with syntax highlighting
+- **Lists**: Ordered and unordered lists
+- **Links**: `[text](url)`
+- **Images**: `![alt text](image-url)`
+- **Blockquotes**: `> Quote text`
+
+### Example Code Blocks
+
+````markdown
+```javascript
+function greet(name) {
+    return `Hello, ${name}!`;
+}
 ```
+
+```python
+def greet(name):
+    return f"Hello, {name}!"
+```
+````
+
+### Best Practices
+
+1. **Filename convention**: Use lowercase with hyphens (e.g., `my-awesome-post.md`)
+2. **Descriptive titles**: Clear, engaging titles that describe the content
+3. **Good descriptions**: Write compelling 1-2 sentence summaries for listings
+4. **Relevant tags**: Use 2-5 tags that accurately categorize your content
+5. **Images**: Optimize images before adding them to keep page load fast
+6. **Dates**: Use YYYY-MM-DD format for dates (e.g., 2026-01-18)
+7. **Proofread**: Check your content locally with `npm run dev` before pushing
+
+### Testing Locally
+
+Before pushing, test your blog post locally:
+
+```bash
+npm run dev
+```
+
+Then visit http://localhost:4321/blog to see your post in the listing and click through to read it.
+
+### Examples
+
+Check out these example posts in the repository:
+- `src/content/blog/welcome.md` - A simple welcome post
+- `src/content/blog/building-scalable-systems.md` - Technical deep-dive with code examples
+- `src/content/blog/future-of-ai-in-development.md` - Opinion piece with multiple sections
 
 ## 🚀 Deployment
 
