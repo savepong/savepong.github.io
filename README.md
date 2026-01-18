@@ -186,8 +186,8 @@ Then visit http://localhost:4321/blog to see your post in the listing and click 
 
 Check out these example posts in the repository:
 - `src/content/blog/welcome.md` - A simple welcome post
-- `src/content/blog/building-scalable-systems.md` - Technical deep-dive with code examples
-- `src/content/blog/future-of-ai-in-development.md` - Opinion piece with multiple sections
+- `src/content/blog/building-scalable-systems.md` - Technical deep-dive with code examples (added in this PR)
+- `src/content/blog/future-of-ai-in-development.md` - Opinion piece with multiple sections (added in this PR)
 
 ## 🚀 Deployment
 
