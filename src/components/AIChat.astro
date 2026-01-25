@@ -90,7 +90,7 @@
     }
 
     // Gemini API Call
-    async function callGemini(prompt: string, systemInstruction: string): Promise<string> {
+    async function callGemini(prompt, systemInstruction) {
         if (!apiKey) {
             return "API key not configured. Please set PUBLIC_GEMINI_API_KEY in your .env file.";
         }
@@ -120,7 +120,7 @@
     }
 
     // Add bubble to chat
-    function addBubble(text: string, type: 'user' | 'ai', id: string | null = null) {
+    function addBubble(text, type, id = null) {
         const chatContainer = document.getElementById('chat-container');
         const div = document.createElement('div');
         div.className = type === 'user' ? "chat-bubble-user" : "chat-bubble-ai";
@@ -132,7 +132,7 @@
 
     // Handle chat submission
     async function handleChat() {
-        const chatInput = document.getElementById('chat-input') as HTMLInputElement;
+        const chatInput = document.getElementById('chat-input');
         const text = chatInput?.value.trim();
         if (!text) return;
         
@@ -151,8 +151,8 @@
     }
 
     // Prefill and open chat
-    function prefillChat(text: string) {
-        const chatInput = document.getElementById('chat-input') as HTMLInputElement;
+    function prefillChat(text) {
+        const chatInput = document.getElementById('chat-input');
         if (chatInput) chatInput.value = text;
         handleChat();
     }
@@ -162,17 +162,27 @@
     document.getElementById('close-chat-btn')?.addEventListener('click', toggleChat);
     document.getElementById('send-btn')?.addEventListener('click', handleChat);
     document.getElementById('chat-input')?.addEventListener('keypress', (e) => {
-        if ((e as KeyboardEvent).key === 'Enter') handleChat();
+        if (e.key === 'Enter') handleChat();
     });
 
     document.getElementById('open-chat-from-bento')?.addEventListener('click', () => {
+        const bentoInput = document.getElementById('chat-input-bento');
+        const text = bentoInput?.value.trim();
+        if (text) {
+            prefillChat(text);
+            bentoInput.value = '';
+        }
         toggleChat();
     });
 
     document.getElementById('chat-input-bento')?.addEventListener('keypress', (e) => {
-        if ((e as KeyboardEvent).key === 'Enter') {
-            const input = e.target as HTMLInputElement;
-            prefillChat(input.value);
+        if (e.key === 'Enter') {
+            const input = e.target;
+            const text = input.value.trim();
+            if (text) {
+                prefillChat(text);
+                input.value = '';
+            }
             toggleChat();
         }
     });
