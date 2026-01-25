@@ -178,10 +178,12 @@
     document.getElementById('chat-input-bento')?.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             const input = e.target;
-            const text = input.value.trim();
-            if (text) {
-                prefillChat(text);
-                input.value = '';
+            if (input && input.value) {
+                const text = input.value.trim();
+                if (text) {
+                    prefillChat(text);
+                    input.value = '';
+                }
             }
             toggleChat();
         }
