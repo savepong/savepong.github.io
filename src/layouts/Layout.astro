@@ -89,7 +89,7 @@ const { title, description = "Pongsiri P. - Tech Executive, Community Leader, So
         @media (min-width: 1024px) {
             .bento-grid {
                 grid-template-columns: repeat(4, 1fr);
-                grid-template-rows: repeat(3, minmax(280px, auto));
+                grid-template-rows: repeat(2, minmax(280px, auto)) minmax(200px, auto);
             }
         }
 
@@ -117,6 +117,7 @@ const { title, description = "Pongsiri P. - Tech Executive, Community Leader, So
         }
 
         .col-span-2 { grid-column: span 2; }
+        .col-span-4 { grid-column: span 4; }
         .row-span-2 { grid-row: span 2; }
 
         /* Typography & Gradients */
