@@ -218,15 +218,37 @@ const { title, description = "Pongsiri Pisut. - Tech Executive, Community Leader
         .btn-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: #64748b; box-shadow: 0 2px 10px rgba(0,0,0,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); }
         .btn-icon:hover { transform: scale(1.05); background: white; color: var(--accent-color); box-shadow: 0 4px 15px rgba(0,113,227,0.15); }
 
-        /* Full Screen Section Utility */
+        /* Section spacing utilities — responsive vertical rhythm */
         .section-screen {
-            min-height: 100vh;
+            min-height: auto;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            padding-top: 80px;
-            padding-bottom: 60px;
+            padding-top: clamp(56px, 8vh, 96px);
+            padding-bottom: clamp(48px, 6vh, 96px);
             position: relative;
+            gap: 1.25rem;
+        }
+
+        /* Hero sections remain full viewport for strong first impression */
+        #hero.section-screen,
+        header.section-screen {
+            min-height: 100vh;
+        }
+
+        /* Narrow centered inner container utility for readable measure */
+        .section-inner {
+            max-width: 72rem; /* 1152px */
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1.25rem;
+            padding-right: 1.25rem;
+            width: 100%;
+        }
+
+        /* Slight, consistent spacing between stacked parallax sections */
+        .parallax-section {
+            margin-bottom: 2.5rem;
         }
 
         /* No scrollbar utility */
