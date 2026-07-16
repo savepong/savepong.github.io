@@ -1,5 +1,7 @@
 # savepong.github.io — Personal portfolio (Astro)
 
+https://savepong.com
+
 This repository is a personal portfolio and blog built with Astro. It includes a bento-grid homepage, an AI chat widget (Gemini), and a content-driven blog using Astro Content Collections.
 
 Quick links
