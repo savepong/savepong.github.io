@@ -921,7 +921,7 @@ a.c-val:hover{color:var(--copper-lt)}
     <div class="secbody">
       <h2 style="max-width:14ch; margin-bottom:44px">สำรองที่นั่ง</h2>
       <iframe name="aifs-sink" id="aifs-sink" title="form target" style="display:none"></iframe>
-      <form class="form g" id="applyForm" method="post" target="aifs-sink"
+      <form class="form g" id="applyForm" method="post" enctype="application/json" target="aifs-sink" 
             action="https://n8n.c9n.co/webhook/course-submissions" style="row-gap:6px">
         <div class="f" style="grid-column:1/7"><label for="n">ชื่อ–นามสกุล</label><input id="n" name="name" required></div>
         <div class="f" style="grid-column:7/13"><label for="b">ชื่อธุรกิจ และตำแหน่ง</label><input id="b" name="business" required></div>
