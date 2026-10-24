@@ -89,7 +89,7 @@ Important: the content collection schema is defined in [src/content/config.ts](s
 
 This project is set up for static output. The easiest deployment is GitHub Pages (site URL is set in `astro.config.mjs`). Typical flow:
 
-1. Push to the `master` branch (the repo is currently configured with `master` as default). 
+1. Push to the `main` branch (the repo is currently configured with `main` as default). 
 2. Use GitHub Actions or Pages to build and deploy the `dist` output.
 
 If you want a GitHub Actions workflow, I can add a minimal `build-and-deploy` Action for GitHub Pages.

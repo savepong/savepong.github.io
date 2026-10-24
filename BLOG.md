@@ -56,8 +56,8 @@ git add src/content/blog/your-post-name.md
 # Commit with a descriptive message
 git commit -m "Add blog post: Your Awesome Post Title"
 
-# Push to the master branch
-git push origin master
+# Push to the main branch
+git push origin main
 ```
 
 ### 6. Automatic Deployment
