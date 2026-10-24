@@ -1,1 +1,6 @@
 theme: jekyll-theme-cayman
+exclude:
+  - src
+  - node_modules
+  - .astro
+  - public
