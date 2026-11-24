@@ -2,6 +2,7 @@
 title: "Building Scalable Systems: Lessons from the Field"
 description: "Key insights and best practices for designing and implementing scalable software architectures that can grow with your business."
 pubDate: 2026-01-15
+heroImage: "/blog/building-scalable-systems/cover.jpg"
 author: "Pongsiri P."
 tags: ["architecture", "scalability", "best-practices"]
 ---

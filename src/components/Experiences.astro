@@ -1,100 +1,206 @@
 ---
-// Experiences Timeline Section
+// Experience index — one row per role, expandable for detail.
+const years = new Date().getFullYear() - 2012;
 const experiences = [
     {
-        title: "President",
-        period: "Oct 2023 – Present",
-        company: "Thai Programmer Association (TPA)",
+        title: 'CTO & Co-founder',
+        period: 'Jan 2020 – Present',
+        company: 'Code Passion',
         points: [
-            "Organizational Leadership: Provide strategic vision and governance for a professional network of 200,000+ members, fostering the growth of the Thai developer ecosystem.",
-            "Strategic Alliances: Orchestrated a formal Memorandum of Understanding (MOU) with <strong>Alibaba Cloud</strong> to facilitate resource accessibility and maintain collaborative partnerships with government entities (DEPA, NIA).",
-            "National Initiatives: Spearheaded major initiatives such as \"National Coding Day\" and specialized AI symposiums to maintain Thailand's competitive standing globally."
-        ]
+            'Set the technology roadmap and engineering standards. Packaged the team\'s conventions as AI agent Skills and the <strong>c9n CLI</strong>, which installs skills and runs guarded, tag-based deployments with automated releases.',
+            'Built the delivery platform on the WorkEngine stack (Bun, ElysiaJS, Next.js, Supabase, Turborepo): shared GitHub Actions CI/CD, Docker and Coolify deploys, and spec-driven documentation aligned with ISO/IEC 29110.',
+            'Shipped client systems across fintech, e-commerce, CRM and LINE-based association platforms, from SEC-regulated investment advisory software to payment and inventory integrations.',
+        ],
     },
     {
-        title: "Chief Technology Officer & Co-founder",
-        period: "Jan 2020 – Present",
-        company: "Code Passion Co., Ltd.",
+        title: 'Committee Member, former President',
+        period: 'Oct 2023 – Present',
+        company: 'Thai Programmer Association',
         points: [
-            "Technology Strategy: Formulate the long-term technological roadmap, ensuring the adoption of industry-leading tools and methodologies.",
-            "Platform Innovation (WorkEngine): Directed the development of WorkEngine, an advanced operational management platform leveraging AI to streamline organizational workflows.",
-            "R&D Leadership: Conduct ongoing research into Generative AI applications to enhance enterprise product functionality and user experience."
-        ]
+            'As President (Oct 2023 – Mar 2026): provided strategic vision and governance for a professional network of 200,000+ members.',
+            'Signed an MOU with <strong>Alibaba Cloud</strong>, and maintained partnerships with government bodies (depa, NIA).',
+            'Led national initiatives such as National Coding Day and AI symposiums.',
+        ],
     },
     {
-        title: "Lead Software Engineer",
-        period: "Oct 2021 – Present",
-        company: "London Stock Exchange Group (LSEG)",
+        title: 'Lead Software Engineer',
+        period: 'Oct 2021 – Apr 2024',
+        company: 'London Stock Exchange Group',
         points: [
-            "Engineering Leadership: Oversee a multi-disciplinary team of 20 engineers in the delivery of critical financial software utilized by global professionals.",
-            "Systems Integration: Architected the integration of Refinitiv data assets with Microsoft 365 and Google Workspace environments, enhancing data accessibility and interoperability."
-        ]
+            'Led a multi-disciplinary team of 20 engineers delivering financial software for global professionals.',
+            'Architected the integration of Refinitiv data with Microsoft 365 and Google Workspace.',
+        ],
     },
     {
-        title: "Senior Software Engineer",
-        period: "Jan 2021 – Oct 2021",
-        company: "Refinitiv Software (Thailand) Co., Ltd.",
+        title: 'Senior Software Engineer',
+        period: 'Jan 2021 – Oct 2021',
+        company: 'Refinitiv',
         points: [
-            "Implemented enterprise applications for Microsoft Office 365 Platforms using TypeScript, LitElement, AngularJS, and Node.js."
-        ]
+            'Built enterprise Microsoft Office 365 add-ins that bring financial data and productivity tools into Office, with TypeScript, LitElement, AngularJS and Node.js.',
+        ],
     },
     {
-        title: "Senior Software Developer",
-        period: "Apr 2019 – Jan 2021",
-        company: "Course Square Co., Ltd.",
+        title: 'Senior Software Developer',
+        period: 'Apr 2019 – Jan 2021',
+        company: 'Course Square',
         points: [
-            "Software Optimization: Implemented architectural refinements and standardized codebases to maximize system performance and reusability across multiple projects.",
-            "Infrastructure Management: Established a Kong API Gateway to ensure robust security and facilitate scalable system growth."
-        ]
+            'Refined the architecture and standardized codebases for performance and reuse across projects. Set up a Kong API Gateway for security and scale.',
+        ],
     },
     {
-        title: "CTO & Co-founder",
-        period: "Apr 2016 – Jan 2021",
-        company: "Ideagital Co., Ltd.",
+        title: 'CTO & Co-founder',
+        period: 'Apr 2016 – Jan 2021',
+        company: 'Ideagital',
         points: [
-            "Operational Management: Assigned and oversaw daily tasks of technical team members.",
-            "Web Development: Developed web applications using Laravel, CodeIgniter, PhalconPHP, MySQL, MongoDB, Ionic, and WordPress."
-        ]
+            'Assigned and oversaw the daily work of the technical team. Built web apps with Laravel, CodeIgniter, PhalconPHP, MySQL, MongoDB, Ionic and WordPress.',
+        ],
     },
     {
-        title: "Lead Software Engineer",
-        period: "Mar 2015 – Jan 2016",
-        company: "Jinue Global Co., Ltd.",
+        title: 'Lead Software Engineer',
+        period: 'Mar 2015 – Jan 2016',
+        company: 'Jinue Global',
         points: [
-            "E-Commerce Development: Developed comprehensive e-commerce websites and stock management systems using PHP, MySQL, and Git."
-        ]
+            'Developed e-commerce websites and stock management systems (PHP, MySQL, Git).',
+        ],
     },
     {
-        title: "Computer & Programming Teacher",
-        period: "May 2012 – Aug 2016",
-        company: "Dusit Commercial College",
+        title: 'Computer & Programming Teacher',
+        period: 'May 2012 – Aug 2016',
+        company: 'Dusit Commercial College',
         points: [
-            "Pedagogy: Taught subjects including Computer Programming, Network Systems, and Database Administration.",
-            "System Development: Developed and deployed a custom Classroom Management System."
-        ]
-    }
+            'Taught computer programming, network systems and database administration.',
+            'Built and deployed <strong>Saalee.com</strong>, a classroom teaching and management system (from 2014).',
+        ],
+    },
 ];
 ---
 
-<section id="journey" class="section-screen scroll-mt-28">
-    <h2 class="text-3xl font-bold mb-12 text-[#1d1d1f] tracking-tight text-center">Experiences</h2>
-    
-    <div class="timeline-container max-w-2xl mx-auto w-full">
-        {experiences.map((exp, index) => (
-            <div class="timeline-item">
-                {index < experiences.length - 1 && <div class="timeline-line"></div>}
-                <div class="timeline-dot"></div>
-                <div class="flex flex-col md:flex-row md:justify-between md:items-baseline mb-2">
-                    <h3 class="text-xl font-bold text-[#1d1d1f]">{exp.title}</h3>
-                    <span class="text-sm text-slate-400 font-medium">{exp.period}</span>
-                </div>
-                <div class="text-sm text-[#0071e3] font-semibold mb-4">{exp.company}</div>
-                <ul class="space-y-3 text-slate-600 leading-relaxed text-sm list-disc list-outside ml-4">
-                    {exp.points.map(point => (
-                        <li set:html={point}></li>
-                    ))}
-                </ul>
-            </div>
-        ))}
+<section id="work" class="section">
+    <div class="wrap">
+        <div class="section-head">
+            <p class="eyebrow" data-reveal>Experience</p>
+            <h2 class="display h2" data-split>
+                <span class="line"><span>{years} years,</span></span>
+                <span class="line"><span style="--d:.1s">from classroom to <em>CTO.</em></span></span>
+            </h2>
+        </div>
+
+        <ul class="exp-list">
+            {experiences.map((exp, i) => (
+                <li data-reveal style={`--d:${Math.min(i, 4) * 0.05}s`}>
+                    <details class="exp">
+                        <summary class="exp-row">
+                            <span class="exp-period mono">{exp.period}</span>
+                            <span class="exp-company">{exp.company}</span>
+                            <span class="exp-title">{exp.title}</span>
+                            <span class="exp-toggle" aria-hidden="true"></span>
+                        </summary>
+                        <ul class="exp-points">
+                            {exp.points.map((p) => <li set:html={p} />)}
+                        </ul>
+                    </details>
+                </li>
+            ))}
+        </ul>
     </div>
 </section>
+
+<style>
+    .exp-list { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--line); }
+    .exp { border-top: 1px solid var(--line); }
+    .exp-row {
+        list-style: none;
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: 1fr 28px;
+        grid-template-areas:
+            'period toggle'
+            'company toggle'
+            'title toggle';
+        gap: 6px 16px;
+        padding: 28px 0;
+        position: relative;
+        transition: padding 0.5s var(--ease);
+    }
+    .exp-row::-webkit-details-marker { display: none; }
+    .exp-row::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: -1px;
+        height: 1px;
+        width: 100%;
+        background: var(--grad);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform 0.8s var(--ease);
+    }
+    .exp-row:hover::before,
+    .exp[open] .exp-row::before { transform: scaleX(1); }
+
+    .exp-period { grid-area: period; color: var(--muted); }
+    .exp-company {
+        grid-area: company;
+        font-family: var(--font-display);
+        font-size: clamp(28px, 3.2vw, 46px);
+        line-height: 1.05;
+        letter-spacing: -0.015em;
+        transition: transform 0.6s var(--ease), color 0.4s var(--ease);
+    }
+    .exp-title { grid-area: title; color: var(--ink-2); font-size: 15px; }
+    .exp-toggle {
+        grid-area: toggle;
+        align-self: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid var(--line-2);
+        position: relative;
+        transition: transform 0.5s var(--ease), border-color 0.3s;
+    }
+    .exp-toggle::before,
+    .exp-toggle::after {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 10px;
+        height: 1px;
+        background: var(--ink);
+        transform: translate(-50%, -50%);
+    }
+    .exp-toggle::after { transform: translate(-50%, -50%) rotate(90deg); }
+    .exp[open] .exp-toggle { transform: rotate(45deg); border-color: var(--coral); }
+    .exp-row:hover .exp-company { transform: translateX(8px); }
+
+    @media (min-width: 900px) {
+        .exp-row {
+            grid-template-columns: 220px 1.3fr 1fr 28px;
+            grid-template-areas: 'period company title toggle';
+            align-items: center;
+            gap: 24px;
+        }
+    }
+
+    .exp-points {
+        margin: 0;
+        padding: 0 0 32px;
+        list-style: none;
+        display: grid;
+        gap: 12px;
+        max-width: 72ch;
+        color: var(--ink-2);
+    }
+    @media (min-width: 900px) { .exp-points { margin-left: 244px; } }
+    .exp-points li { position: relative; padding-left: 22px; }
+    .exp-points li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0.75em;
+        width: 10px;
+        height: 1px;
+        background: var(--coral);
+    }
+    .exp-points :global(strong) { color: var(--ink); font-weight: 500; }
+</style>

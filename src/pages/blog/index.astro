@@ -1,52 +1,119 @@
 ---
 // Blog index page
 import Layout from '@/layouts/Layout.astro';
+import Navbar from '@/components/Navbar.astro';
 import { getCollection } from 'astro:content';
+import { postCover } from '@/lib/post-cover';
 
 const posts = await getCollection('blog');
 const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const fmt = (d: Date) =>
+    d.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: '2-digit' });
 ---
 
-<Layout title="Blog | Pongsiri P.">
-    <div class="min-h-screen pt-24 pb-16 px-6">
-        <div class="max-w-4xl mx-auto">
-            <a href="/" class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors mb-8">
-                <i class="fas fa-arrow-left"></i>
-                Back to Home
-            </a>
-            
-            <h1 class="text-4xl md:text-5xl font-bold text-[#1d1d1f] mb-4">Blog</h1>
-            <p class="text-lg text-slate-500 mb-12">Thoughts on technology, leadership, and building products.</p>
-            
-            <div class="space-y-8">
-                {sortedPosts.length === 0 ? (
-                    <div class="text-center py-20 text-slate-400">
-                        <i class="fas fa-pen-fancy text-4xl mb-4"></i>
-                        <p>No posts yet. Check back soon!</p>
-                    </div>
-                ) : (
-                    sortedPosts.map(post => (
-                        <article class="group">
-                            <a href={`/blog/${post.slug}`} class="block p-6 rounded-2xl bg-white/60 backdrop-blur-xl border border-white/60 hover:bg-white/90 hover:shadow-lg transition-all">
-                                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mb-3">
-                                    <h2 class="text-xl font-bold text-[#1d1d1f] group-hover:text-[#0071e3] transition-colors">{post.data.title}</h2>
-                                    <time class="text-sm text-slate-400 font-medium">
-                                        {new Date(post.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                                    </time>
+<Layout title="Writing — Pongsiri Pisut." description="Notes on technology, leadership, AI tooling and building products." lang="th">
+    <Navbar />
+    <main class="blog-index" id="main">
+        <div class="wrap">
+            <header class="blog-head">
+                <p class="eyebrow" data-reveal>Writing · {sortedPosts.length} posts</p>
+                <h1 class="display blog-title" data-split>
+                    <span class="line"><span>Notes from</span></span>
+                    <span class="line"><span style="--d:.1s">the <em>workbench.</em></span></span>
+                </h1>
+                <p class="lede" data-reveal style="--d:.3s">Technology, leadership, AI tooling and building products. Mostly in Thai.</p>
+            </header>
+
+            {sortedPosts.length === 0 ? (
+                <p class="empty">No posts yet. Check back soon.</p>
+            ) : (
+                <ul class="index-list">
+                    {sortedPosts.map((post, i) => (
+                        <li data-reveal style={`--d:${Math.min(i, 6) * 0.04}s`}>
+                            <a href={`/blog/${post.slug}`} class="index-item">
+                                <time class="mono index-date" datetime={post.data.pubDate.toISOString()}>{fmt(post.data.pubDate)}</time>
+                                <div class="index-main">
+                                    <h2 class="index-title thai-safe">{post.data.title}</h2>
+                                    <p class="index-desc thai-safe">{post.data.description}</p>
+                                    {post.data.tags && (
+                                        <div class="index-tags">
+                                            {post.data.tags.map((tag: string) => (
+                                                <span class="mono">{tag}</span>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
-                                <p class="text-slate-600 leading-relaxed">{post.data.description}</p>
-                                {post.data.tags && (
-                                    <div class="flex flex-wrap gap-2 mt-4">
-                                        {post.data.tags.map((tag: string) => (
-                                            <span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">{tag}</span>
-                                        ))}
-                                    </div>
-                                )}
+                                {postCover(post) ? (
+                                    <span class="index-thumb" aria-hidden="true">
+                                        <img src={postCover(post)!.src} width="1200" height="630" alt="" loading="lazy" decoding="async">
+                                    </span>
+                                ) : <span class="index-thumb index-thumb--empty" aria-hidden="true" />}
+                                <span class="index-arrow" aria-hidden="true">↗</span>
                             </a>
-                        </article>
-                    ))
-                )}
-            </div>
+                        </li>
+                    ))}
+                </ul>
+            )}
         </div>
-    </div>
+    </main>
 </Layout>
+
+<style>
+    .blog-index { padding: clamp(140px, 18vw, 220px) 0 120px; }
+    .blog-head { margin-bottom: clamp(56px, 8vw, 112px); display: grid; gap: 24px; }
+    .blog-title { font-size: clamp(60px, 10vw, 160px); line-height: 0.92; letter-spacing: -0.035em; }
+    .empty { color: var(--muted); }
+
+    .index-list { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--line); }
+    .index-item {
+        display: grid;
+        grid-template-columns: 1fr 24px;
+        gap: 12px 24px;
+        padding: 32px 0;
+        border-top: 1px solid var(--line);
+        transition: padding 0.5s var(--ease);
+    }
+    .index-date { color: var(--muted); grid-column: 1 / -1; }
+    .index-main { min-width: 0; }
+    .index-title {
+        margin: 0 0 8px;
+        font-size: clamp(22px, 2.4vw, 32px);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        transition: color 0.3s var(--ease);
+    }
+    .index-desc { margin: 0; color: var(--ink-2); max-width: 70ch; }
+    .index-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .index-tags span {
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line-2);
+        color: var(--muted);
+        font-size: 11px;
+    }
+    .index-thumb {
+        grid-column: 1 / -1;
+        order: -1;
+        display: block;
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        aspect-ratio: 1200 / 630;
+        background: var(--bg-2);
+    }
+    .index-thumb--empty { display: none; }
+    @media (min-width: 900px) { .index-thumb--empty { display: block; visibility: hidden; } }
+    .index-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.8s var(--ease); }
+    .index-item:hover .index-thumb img { transform: scale(1.04); }
+    .index-arrow { color: var(--muted); font-size: 20px; transition: transform 0.5s var(--ease), color 0.3s; }
+    .index-item:hover .index-title { color: var(--coral); }
+    .index-item:hover .index-arrow { color: var(--coral); transform: translate(4px, -4px); }
+
+    @media (min-width: 900px) {
+        .index-item { grid-template-columns: 160px 1fr 240px 24px; align-items: start; }
+        .index-thumb { grid-column: auto; order: 0; }
+        .index-date { grid-column: auto; padding-top: 8px; }
+        .index-item:hover { padding-left: 12px; }
+    }
+</style>

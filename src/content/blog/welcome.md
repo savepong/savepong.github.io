@@ -2,6 +2,7 @@
 title: "Welcome to My Blog"
 description: "This is my first blog post. I'll be sharing insights on technology, leadership, and building products."
 pubDate: 2026-01-10
+heroImage: "/blog/welcome/cover.jpg"
 author: "Pongsiri P."
 tags: ["welcome", "introduction"]
 ---

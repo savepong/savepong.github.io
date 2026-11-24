@@ -2,6 +2,7 @@
 title: "Jev: โมเดลที่ไม่ยอมพูด แต่ตอบคำถามแม่นกว่า"
 description: "ทำไมโมเดลที่ไม่เขียนข้อความเลยสักตัวอักษร อาจเหมาะกับงาน classification, routing และ guardrails มากกว่าการสั่ง LLM ให้คืน JSON"
 pubDate: 2026-10-30
+heroImage: "/blog/jev-system-one-typesafe/cover.jpg"
 author: "Pongsiri P."
 tags: ["ai", "structured-output"]
 ---

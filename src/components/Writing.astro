@@ -1,0 +1,155 @@
+---
+// Latest writing — newest posts from the blog collection.
+import { getCollection } from 'astro:content';
+import { postCover } from '@/lib/post-cover';
+
+const posts = (await getCollection('blog'))
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .slice(0, 5);
+
+const fmt = (d: Date) =>
+    d.toLocaleDateString('en-GB', { year: 'numeric', month: 'short', day: '2-digit' });
+---
+
+<section id="writing" class="section">
+    <div class="wrap">
+        <div class="section-head">
+            <p class="eyebrow" data-reveal>Writing</p>
+            <div class="writing-head">
+                <h2 class="display h2" data-split>
+                    <span class="line"><span>Notes from</span></span>
+                    <span class="line"><span style="--d:.1s">the <em>workbench.</em></span></span>
+                </h2>
+                <a href="/blog" class="arrow-link" data-reveal>All writing <span aria-hidden="true">→</span></a>
+            </div>
+        </div>
+
+        <ul class="posts">
+            {posts.map((post, i) => (
+                <li data-reveal style={`--d:${i * 0.05}s`}>
+                    <a class="post" href={`/blog/${post.slug}`} data-cover={postCover(post)?.src}>
+                        <time class="mono post-date" datetime={post.data.pubDate.toISOString()}>{fmt(post.data.pubDate)}</time>
+                        <span class="post-title thai-safe">{post.data.title}</span>
+                        <span class="post-tags mono">{(post.data.tags ?? []).slice(0, 2).join(' · ')}</span>
+                        <span class="post-arrow" aria-hidden="true">↗</span>
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </div>
+    <div class="peek" id="post-peek" aria-hidden="true"><img alt="" width="1200" height="630"></div>
+</section>
+
+<style>
+    .writing-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+    }
+    .posts { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--line); }
+    .post {
+        display: grid;
+        grid-template-columns: 1fr 24px;
+        grid-template-areas: 'date arrow' 'title arrow' 'tags arrow';
+        gap: 8px 16px;
+        padding: 28px 0;
+        border-top: 1px solid var(--line);
+        position: relative;
+        transition: padding 0.5s var(--ease);
+    }
+    .post-date { grid-area: date; color: var(--muted); }
+    .post-title {
+        grid-area: title;
+        font-size: clamp(20px, 2vw, 26px);
+        font-weight: 400;
+        letter-spacing: -0.01em;
+        transition: color 0.3s var(--ease);
+    }
+    .post-tags { grid-area: tags; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .post-arrow {
+        grid-area: arrow;
+        align-self: center;
+        color: var(--muted);
+        font-size: 20px;
+        transition: transform 0.5s var(--ease), color 0.3s;
+    }
+    .post:hover .post-title { color: var(--coral); }
+    .post:hover .post-arrow { transform: translate(4px, -4px); color: var(--coral); }
+
+    @media (min-width: 900px) {
+        .post {
+            grid-template-columns: 140px 1fr minmax(0, 240px) 24px;
+            grid-template-areas: 'date title tags arrow';
+            align-items: center;
+            gap: 24px;
+        }
+        .post:hover { padding-left: 12px; }
+        .post-tags { text-align: right; }
+    }
+
+    /* Floating cover preview that trails the cursor (fine pointers only) */
+    .peek {
+        position: fixed;
+        left: 0;
+        top: 0;
+        z-index: 40;
+        width: 340px;
+        aspect-ratio: 1200 / 630;
+        border-radius: 16px;
+        overflow: hidden;
+        pointer-events: none;
+        border: 1px solid var(--line-2);
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        transform: translate3d(var(--x, 0), var(--y, 0), 0) scale(0.92) rotate(-2deg);
+        transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+        display: none;
+    }
+    .peek.is-on { opacity: 1; transform: translate3d(var(--x, 0), var(--y, 0), 0) scale(1) rotate(-2deg); }
+    .peek img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    @media (hover: hover) and (pointer: fine) and (min-width: 900px) {
+        .peek { display: block; }
+    }
+</style>
+
+<script>
+    const peek = document.getElementById('post-peek');
+    const img = peek?.querySelector('img');
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine) and (min-width: 900px)').matches;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (peek && img && fine && !reduce) {
+        let tx = 0, ty = 0, x = 0, y = 0, raf = 0;
+        const follow = () => {
+            x += (tx - x) * 0.18;
+            y += (ty - y) * 0.18;
+            peek.style.setProperty('--x', `${x}px`);
+            peek.style.setProperty('--y', `${y}px`);
+            raf = Math.abs(tx - x) + Math.abs(ty - y) > 0.5 ? requestAnimationFrame(follow) : 0;
+        };
+        document.querySelectorAll<HTMLAnchorElement>('#writing .post[data-cover]').forEach((a) => {
+            if (!a.dataset.cover) return;
+            a.addEventListener('pointerenter', (e) => {
+                if (img.getAttribute('src') !== a.dataset.cover) img.setAttribute('src', a.dataset.cover!);
+                tx = x = e.clientX + 28;
+                ty = y = e.clientY - 200;
+                peek.classList.add('is-on');
+                follow();
+            });
+            a.addEventListener('pointermove', (e) => {
+                tx = e.clientX + 28;
+                ty = e.clientY - 200;
+                if (!raf) raf = requestAnimationFrame(follow);
+            });
+            a.addEventListener('pointerleave', () => peek.classList.remove('is-on'));
+        });
+        // Warm the cache so the first hover isn't blank
+        window.addEventListener('load', () => {
+            document.querySelectorAll<HTMLAnchorElement>('#writing .post[data-cover]').forEach((a) => {
+                const pre = new Image();
+                pre.src = a.dataset.cover!;
+            });
+        });
+    }
+</script>

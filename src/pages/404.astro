@@ -1,0 +1,56 @@
+---
+// Not found — GitHub Pages serves dist/404.html for unknown paths.
+import Layout from '@/layouts/Layout.astro';
+import Navbar from '@/components/Navbar.astro';
+---
+
+<Layout title="Not found — Pongsiri Pisut." description="This page doesn't exist.">
+    <Navbar />
+    <main class="nf" id="main">
+        <div class="wrap">
+            <p class="eyebrow">Error 404</p>
+            <h1 class="display nf-title">
+                Lost in<br><em>the orbit.</em>
+            </h1>
+            <p class="lede">The page you're looking for moved or never existed.</p>
+            <div class="nf-actions">
+                <a href="/" class="btn btn--solid">Back home</a>
+                <a href="/blog" class="btn">Read the blog</a>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<style>
+    .nf {
+        min-height: 100svh;
+        display: flex;
+        align-items: center;
+        padding: 120px 0 80px;
+        position: relative;
+        overflow: hidden;
+    }
+    .nf::before {
+        content: '';
+        position: absolute;
+        right: -10vw;
+        top: 50%;
+        width: min(60vw, 640px);
+        aspect-ratio: 1;
+        transform: translateY(-50%);
+        border-radius: 50%;
+        background:
+            radial-gradient(circle at 30% 30%, rgba(255, 154, 107, 0.4), transparent 45%),
+            radial-gradient(circle at 70% 70%, rgba(46, 196, 182, 0.35), transparent 50%),
+            radial-gradient(circle at 50% 50%, #15171c 0%, #07080a 70%);
+        pointer-events: none;
+    }
+    .wrap { position: relative; }
+    .nf-title {
+        font-size: clamp(64px, 12vw, 180px);
+        line-height: 0.9;
+        letter-spacing: -0.035em;
+        margin: 24px 0 28px;
+    }
+    .nf-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+</style>

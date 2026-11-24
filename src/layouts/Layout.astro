@@ -1,28 +1,51 @@
 ---
+import '../styles/global.css';
+
 interface Props {
   title: string;
   description?: string;
+  lang?: string;
+  image?: string;
 }
 
-const { title, description = "Pongsiri Pisut. - Tech Executive, Community Leader, Software Developer" } = Astro.props;
+const {
+  title,
+  description = 'Pongsiri Pisutakarathada (savepong) — CTO & Co-founder of Code Passion, former President of the Thai Programmer Association. Engineering leader in Bangkok.',
+  lang = 'en',
+  image,
+} = Astro.props;
+
+const site = Astro.site ?? new URL('https://savepong.co');
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImage = image ? new URL(image, site).href : 'https://github.com/savepong.png';
 ---
 
 <!DOCTYPE html>
-<html lang="th" class="scroll-smooth">
+<html lang={lang}>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{title}</title>
     <meta name="description" content={description}>
-    
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="canonical" href={canonical}>
+    <meta property="og:type" content="website">
+    <meta property="og:url" content={canonical}>
+    <meta property="og:site_name" content="savepong">
+    <meta property="og:title" content={title}>
+    <meta property="og:description" content={description}>
+    <meta property="og:image" content={ogImage}>
+    {image && <meta property="og:image:width" content="1200">}
+    {image && <meta property="og:image:height" content="630">}
+    <meta name="twitter:card" content={image ? 'summary_large_image' : 'summary'}>
+    <meta name="twitter:image" content={ogImage}>
 
-    <!-- Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Mark JS early so reveal styles never hide content for no-JS visitors -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
+
+    <!-- Fonts: Instrument Serif (display), Geist (body), Geist Mono, Thai companions -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&family=IBM+Plex+Sans+Thai:wght@300;400;500;600&family=Noto+Serif+Thai:wght@400;500&display=swap" rel="stylesheet">
 
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -44,246 +67,56 @@ const { title, description = "Pongsiri Pisut. - Tech Executive, Community Leader
     <!-- Web App Manifest & MS Tiles -->
     <link rel="manifest" href="/manifest.json">
     <meta name="msapplication-config" content="/browserconfig.xml">
-    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileColor" content="#07080a">
     <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#07080a">
 </head>
-<body class="font-inter bg-[#f5f5f7] text-primary antialiased overflow-x-hidden overflow-y-auto">
-    <!-- Modern Technologist Gradient Background with Parallax -->
-    <div class="tech-bg" id="parallax-bg"></div>
-    
+<body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="progress no-print" id="progress" aria-hidden="true"></div>
+
     <slot />
 
-    <style is:global>
-        html {
-            scroll-behavior: smooth;
-        }
-
-        :root {
-            --bg-color: transparent;
-            --card-bg: rgba(255, 255, 255, 0.65);
-            --text-primary: #1d1d1f;
-            --text-secondary: #86868b;
-            --accent-color: #0071e3;
-            --icon-color: #475569;
-        }
-
-        /* Modern Technologist Background (Mesh Gradient) */
-        .tech-bg {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: -50;
-            will-change: transform;
-            background-color: #f8fafc;
-            background-image: 
-                radial-gradient(at 40% 20%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
-                radial-gradient(at 80% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                radial-gradient(at 0% 50%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
-                radial-gradient(at 80% 50%, rgba(14, 165, 233, 0.15) 0px, transparent 50%),
-                radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
-                radial-gradient(at 80% 100%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
-                radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.5) 0px, transparent 50%);
-            animation: pulse-mesh 15s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulse-mesh {
-            0% { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(1.1); opacity: 1; }
-        }
-
-        /* Bento Grid Layout */
-        .bento-grid {
-            display: grid;
-            grid-template-columns: repeat(1, 1fr);
-            gap: 20px;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        @media (min-width: 768px) {
-            .bento-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (min-width: 1024px) {
-            .bento-grid {
-                grid-template-columns: repeat(4, 1fr);
-                grid-template-rows: repeat(2, minmax(280px, auto)) minmax(200px, auto);
-            }
-        }
-
-        .bento-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(30px);
-            -webkit-backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            border-radius: 28px;
-            padding: 28px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease, border-color 0.3s ease;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.02);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .bento-card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.06);
-            z-index: 10;
-            background: rgba(255, 255, 255, 0.85);
-            border-color: rgba(0, 113, 227, 0.2);
-        }
-
-        .col-span-2 { grid-column: span 2; }
-        .col-span-4 { grid-column: span 4; }
-        .row-span-2 { grid-row: span 2; }
-
-        /* Typography & Gradients */
-        .name-gradient {
-            background: linear-gradient(135deg, #0071e3, #5e5ce6, #af52de);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-size: 200% auto;
-            animation: gradientMove 5s ease infinite;
-        }
-
-        @keyframes gradientMove {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Timeline Styles */
-        .timeline-container { position: relative; padding-left: 10px; }
-        .timeline-item { position: relative; padding-left: 45px; padding-bottom: 48px; }
-        .timeline-item:last-child { padding-bottom: 0; }
-        .timeline-line { position: absolute; left: 7px; top: 20px; bottom: 0; width: 1px; background-color: #cbd5e1; }
-        .timeline-item:last-child .timeline-line { display: none; }
-        .timeline-dot { position: absolute; left: 2px; top: 6px; width: 11px; height: 11px; border-radius: 50%; background-color: white; border: 2px solid #94a3b8; transition: all 0.3s ease; z-index: 10; }
-        .timeline-item:hover .timeline-dot { border-color: var(--accent-color); background-color: var(--accent-color); box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15); }
-
-        /* Carousel Styles (Draggable) */
-        .carousel-container {
-            width: 100%;
-            overflow-x: auto;
-            overflow-y: hidden;
-            position: relative;
-            padding: 10px 0 40px 0;
-            cursor: grab;
-            scrollbar-width: none;
-        }
-        .carousel-container::-webkit-scrollbar { display: none; }
-        
-        .carousel-track {
-            display: flex;
-            gap: 24px;
-            width: max-content;
-            padding-left: 24px;
-            padding-right: 24px;
-        }
-        
-        .carousel-container.active {
-            cursor: grabbing;
-        }
-
-        .project-card {
-            width: 320px;
-            flex-shrink: 0;
-            background: rgba(255,255,255,0.6);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.5);
-            border-radius: 24px;
-            padding: 24px;
-            transition: transform 0.3s ease;
-            user-select: none;
-        }
-        .project-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.9); }
-
-        /* Chat UI */
-        .chat-container::-webkit-scrollbar { display: none; }
-        .chat-bubble-user { background-color: var(--accent-color); color: white; border-radius: 18px 18px 4px 18px; padding: 10px 16px; font-size: 0.9rem; max-width: 85%; margin-left: auto; margin-bottom: 8px; }
-        .chat-bubble-ai { background-color: #f5f5f7; color: #1d1d1f; border-radius: 18px 18px 18px 4px; padding: 10px 16px; font-size: 0.9rem; max-width: 85%; margin-right: auto; margin-bottom: 8px; }
-
-        /* Floating UI */
-        .floating-chat-panel { position: fixed; bottom: 100px; right: 24px; width: 380px; height: 600px; max-height: 80vh; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(30px) saturate(180%); -webkit-backdrop-filter: blur(30px) saturate(180%); border-radius: 24px; box-shadow: 0 12px 40px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.4); z-index: 999; display: flex; flex-direction: column; transform: translateY(20px) scale(0.95); opacity: 0; pointer-events: none; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); overflow: hidden; }
-        .floating-chat-panel.active { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
-        .floating-btn { position: fixed; bottom: 24px; right: 24px; width: 64px; height: 64px; background: rgba(29, 29, 31, 0.95); backdrop-filter: blur(10px); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); cursor: pointer; z-index: 1000; transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
-        .floating-btn:hover { transform: scale(1.05); background: var(--accent-color); }
-        .floating-btn.active { background: var(--accent-color); transform: rotate(45deg); }
-
-        /* Modern Icon Button */
-        .btn-icon { width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: center; transition: all 0.2s; color: #64748b; box-shadow: 0 2px 10px rgba(0,0,0,0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.5); }
-        .btn-icon:hover { transform: scale(1.05); background: white; color: var(--accent-color); box-shadow: 0 4px 15px rgba(0,113,227,0.15); }
-
-        /* Section spacing utilities — responsive vertical rhythm */
-        .section-screen {
-            min-height: auto;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding-top: clamp(56px, 8vh, 96px);
-            padding-bottom: clamp(48px, 6vh, 96px);
-            position: relative;
-            gap: 1.25rem;
-        }
-
-        /* Hero sections remain full viewport for strong first impression */
-        #hero.section-screen,
-        header.section-screen {
-            min-height: 100vh;
-        }
-
-        /* Narrow centered inner container utility for readable measure */
-        .section-inner {
-            max-width: 72rem; /* 1152px */
-            margin-left: auto;
-            margin-right: auto;
-            padding-left: 1.25rem;
-            padding-right: 1.25rem;
-            width: 100%;
-        }
-
-        /* Slight, consistent spacing between stacked parallax sections */
-        .parallax-section {
-            margin-bottom: 2.5rem;
-        }
-
-        /* No scrollbar utility */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Parallax utilities */
-        .parallax-visible {
-            opacity: 1 !important;
-        }
-    </style>
-
     <script>
+        // Scroll reveals: [data-reveal] fades up, [data-split] reveals line by line.
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const targets = document.querySelectorAll<HTMLElement>('[data-reveal], [data-split]');
 
-        const parallaxBg = document.getElementById('parallax-bg');
-        let bgTicking = false;
-
-        function updateBackgroundParallax() {
-            if (parallaxBg) {
-                const scrollY = window.scrollY;
-                const translateY = scrollY * 0.15;
-                const scale = 1 + scrollY * 0.0001;
-                parallaxBg.style.transform = `translateY(${translateY}px) scale(${scale})`;
-            }
+        if (reduce || !('IntersectionObserver' in window)) {
+            targets.forEach((el) => el.classList.add('is-in'));
+        } else {
+            const io = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-in');
+                            io.unobserve(entry.target);
+                        }
+                    });
+                },
+                { threshold: 0.15, rootMargin: '0px 0px -8% 0px' }
+            );
+            targets.forEach((el) => io.observe(el));
         }
 
+        // Scroll progress hairline
+        const progress = document.getElementById('progress');
+        let progressQueued = false;
+        const paintProgress = () => {
+            progressQueued = false;
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            progress?.style.setProperty('--p', String(max > 0 ? window.scrollY / max : 0));
+        };
         window.addEventListener('scroll', () => {
-            if (!bgTicking) {
-                requestAnimationFrame(() => {
-                    updateBackgroundParallax();
-                    bgTicking = false;
-                });
-                bgTicking = true;
-            }
+            if (!progressQueued) { progressQueued = true; requestAnimationFrame(paintProgress); }
         }, { passive: true });
+        paintProgress();
+
+        // Expand every <details> before printing so the CV prints in full.
+        window.addEventListener('beforeprint', () => {
+            document.querySelectorAll('details').forEach((d) => d.setAttribute('open', ''));
+        });
     </script>
 </body>
 </html>

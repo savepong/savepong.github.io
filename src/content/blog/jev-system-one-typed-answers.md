@@ -2,6 +2,7 @@
 title: "Jev: โมเดลที่ไม่พูด แต่ตอบเป็นชนิดข้อมูล"
 description: "TypeSafe AI ทำโมเดลที่ไม่ generate ข้อความเลย รับข้อความ + คำถามแบบมีชนิด แล้วคืนคำตอบพร้อมความน่าจะเป็นที่คาลิเบรตแล้ว — ทางออกของคนที่เบื่อ parse JSON จาก LLM ครับ"
 pubDate: 2026-11-14
+heroImage: "/blog/jev-system-one-typed-answers/cover.jpg"
 author: "Pongsiri P."
 tags: ["ai", "llm"]
 ---

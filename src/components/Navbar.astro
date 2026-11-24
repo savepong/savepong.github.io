@@ -1,58 +1,139 @@
 ---
-// Navbar Component
+// Top navigation — wordmark, section links, live Bangkok clock.
+// Links use "/#id" so they work from blog pages too.
+const links = [
+    { href: '/#now', label: 'Now' },
+    { href: '/#work', label: 'Work' },
+    { href: '/#projects', label: 'Projects' },
+    { href: '/blog', label: 'Writing' },
+    { href: '/#contact', label: 'Contact' },
+];
 ---
 
-<nav id="navbar" class="fixed z-50 left-1/2 -translate-x-1/2 transition-all duration-700 ease-[cubic-bezier(0.25,0.8,0.25,1)] flex items-center justify-center text-xs font-semibold text-slate-500 tracking-wide overflow-x-auto no-scrollbar
-    top-6 w-auto max-w-[90vw] rounded-full px-6 py-3 gap-10 bg-white/80 backdrop-blur-xl saturate-150 border border-white/30 shadow-lg hover:shadow-xl hover:bg-white/95">
-    
-    <a href="#hero" class="hover:text-black transition-colors whitespace-nowrap relative group">
-        Profile
-        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
-    </a>
-    <a href="#work" class="hover:text-black transition-colors whitespace-nowrap relative group">
-        Summary
-        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
-    </a>
-    <a href="#journey" class="hover:text-black transition-colors whitespace-nowrap relative group">
-        Experiences
-        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
-    </a>
-    <a href="#projects" class="hover:text-black transition-colors whitespace-nowrap relative group">
-        Projects
-        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
-    </a>
-    <a href="#tech" class="hover:text-black transition-colors whitespace-nowrap relative group">
-        Skills
-        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
-    </a>
-    <a href="#education" class="hover:text-black transition-colors whitespace-nowrap relative group">
-        Educations
-        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
-    </a>
-    
-    <a href="#cv" class="hover:text-black transition-colors whitespace-nowrap relative group">
-        CV
-        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
-    </a>
+<header class="site-nav" id="site-nav">
+    <div class="nav-inner">
+        <a href="/" class="wordmark" aria-label="savepong — home">
+            <span class="wordmark-dot" aria-hidden="true"></span>
+            savepong
+        </a>
 
-    <!-- Blog -->
-    <a href="/blog" class="hover:text-black transition-colors whitespace-nowrap relative group">
-        Blog
-        <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-black transition-all group-hover:w-full opacity-0 group-hover:opacity-100"></span>
-    </a>
-</nav>
+        <nav aria-label="Primary">
+            <ul class="nav-links">
+                {links.map((l, i) => (
+                    <li class={i === 0 || i === 2 ? 'hide-sm' : ''}>
+                        <a href={l.href} data-nav={l.href.replace('/#', '').replace('/', '')}>{l.label}</a>
+                    </li>
+                ))}
+            </ul>
+        </nav>
+
+        <div class="nav-clock mono" aria-label="Local time in Bangkok">
+            <span class="hide-sm">BKK</span> <span id="bkk-clock">--:--</span>
+        </div>
+    </div>
+</header>
+
+<style>
+    .site-nav {
+        position: fixed;
+        inset: 0 0 auto 0;
+        z-index: 60;
+        transition: background 0.5s var(--ease), border-color 0.5s var(--ease), backdrop-filter 0.5s var(--ease);
+        border-bottom: 1px solid transparent;
+    }
+    .site-nav.is-scrolled {
+        background: rgba(7, 8, 10, 0.72);
+        backdrop-filter: blur(18px) saturate(140%);
+        -webkit-backdrop-filter: blur(18px) saturate(140%);
+        border-color: var(--line);
+    }
+    .nav-inner {
+        max-width: var(--maxw);
+        margin: 0 auto;
+        padding: 18px var(--gutter);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+    }
+    .wordmark {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        font-size: 16px;
+    }
+    .wordmark-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--grad);
+        box-shadow: 0 0 16px rgba(255, 107, 74, 0.6);
+    }
+    .nav-links {
+        display: flex;
+        gap: clamp(16px, 3vw, 36px);
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+    }
+    .nav-links a {
+        color: var(--ink-2);
+        position: relative;
+        transition: color 0.3s var(--ease);
+    }
+    .nav-links a::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -4px;
+        height: 1px;
+        background: var(--coral);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.5s var(--ease);
+    }
+    .nav-links a:hover,
+    .nav-links a.is-active { color: var(--ink); }
+    .nav-links a:hover::after,
+    .nav-links a.is-active::after { transform: scaleX(1); transform-origin: left; }
+    .nav-clock { color: var(--muted); white-space: nowrap; }
+
+    @media (max-width: 640px) {
+        .hide-sm { display: none; }
+    }
+</style>
 
 <script>
-    // Navbar scroll behavior
-    window.addEventListener('scroll', () => {
-        const nav = document.getElementById('navbar');
-        const scrollThreshold = 50; 
-        if (window.scrollY > scrollThreshold) {
-            nav?.classList.remove('top-6', 'w-auto', 'max-w-[90vw]', 'rounded-full', 'px-6', 'py-3', 'gap-8', 'bg-white/30', 'border-white/30', 'shadow-lg', 'hover:shadow-xl', 'hover:bg-white/40');
-            nav?.classList.add('top-0', 'w-full', 'max-w-full', 'rounded-none', 'px-10', 'py-4', 'gap-10', 'bg-white/60', 'backdrop-blur-3xl', 'saturate-150', 'border-b', 'border-slate-200/50', 'shadow-sm');
-        } else {
-            nav?.classList.add('top-6', 'w-auto', 'max-w-[90vw]', 'rounded-full', 'px-6', 'py-3', 'gap-8', 'bg-white/30', 'border-white/30', 'shadow-lg', 'hover:shadow-xl', 'hover:bg-white/40');
-            nav?.classList.remove('top-0', 'w-full', 'max-w-full', 'rounded-none', 'px-10', 'py-4', 'gap-10', 'bg-white/60', 'backdrop-blur-3xl', 'saturate-150', 'border-b', 'border-slate-200/50', 'shadow-sm');
-        }
-    });
+    const nav = document.getElementById('site-nav');
+    const onScroll = () => nav?.classList.toggle('is-scrolled', window.scrollY > 24);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    // Highlight the link for the section in view (home), or "Writing" on blog pages.
+    const navLinks = document.querySelectorAll<HTMLAnchorElement>('[data-nav]');
+    const setActive = (key: string) => navLinks.forEach((a) => a.classList.toggle('is-active', a.dataset.nav === key));
+    if (location.pathname.startsWith('/blog')) {
+        setActive('blog');
+    } else if ('IntersectionObserver' in window) {
+        const navKey: Record<string, string> = { now: 'now', work: 'work', projects: 'projects', writing: 'blog', contact: 'contact' };
+        const sectionIds = ['now', 'work', 'projects', 'writing', 'education', 'ask', 'contact'];
+        const spy = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+                if (e.isIntersecting) setActive(navKey[e.target.id] ?? '');
+            });
+        }, { rootMargin: '-45% 0px -50% 0px' });
+        sectionIds.forEach((id) => { const el = document.getElementById(id); if (el) spy.observe(el); });
+        const hero = document.getElementById('hero');
+        if (hero) new IntersectionObserver(([e]) => { if (e.isIntersecting) setActive(''); }, { rootMargin: '-45% 0px -50% 0px' }).observe(hero);
+    }
+
+    const clock = document.getElementById('bkk-clock');
+    const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Bangkok', hour: '2-digit', minute: '2-digit' });
+    const tick = () => { if (clock) clock.textContent = fmt.format(new Date()); };
+    tick();
+    setInterval(tick, 30_000);
 </script>

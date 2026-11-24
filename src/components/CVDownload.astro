@@ -1,29 +1,104 @@
 ---
-// CV Download Section
+// Contact + footer. "Print CV" uses the print stylesheet (white, canvas-free).
+const year = new Date().getFullYear();
+const links = [
+    { label: 'LinkedIn', href: 'https://linkedin.com/in/savepong' },
+    { label: 'GitHub', href: 'https://github.com/savepong' },
+    { label: 'Writing', href: '/blog' },
+];
 ---
 
-<section id="cv" class="section-screen scroll-mt-28 py-10">
-    <div class="rounded-3xl p-1 bg-gradient-to-r from-slate-100 to-white shadow-sm max-w-3xl mx-auto w-full">
-        <div class="bg-white/80 backdrop-blur-md rounded-[20px] p-8 border border-slate-100 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left hover:shadow-md transition-shadow">
-            <div class="flex flex-col md:flex-row items-center gap-6">
-                <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center text-3xl text-slate-600 shadow-inner">
-                    <i class="far fa-file-pdf text-slate-600"></i>
-                </div>
-                <div>
-                    <h3 class="text-2xl font-bold text-[#1d1d1f] mb-1">Curriculum Vitae</h3>
-                    <p class="text-slate-500 text-sm max-w-md leading-relaxed">Download complete professional background & technical specifications.</p>
-                </div>
-            </div>
-            <button id="download-cv-btn" class="group flex items-center gap-3 px-8 py-4 bg-[#1d1d1f] text-white rounded-full font-semibold text-sm hover:bg-[#0071e3] transition-all shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-0.5 active:scale-95">
-                <span>Download PDF</span>
-                <i class="fas fa-arrow-down text-xs group-hover:animate-bounce"></i>
-            </button>
+<section id="contact" class="section contact">
+    <div class="wrap">
+        <p class="eyebrow" data-reveal>Contact</p>
+        <h2 class="display contact-title" data-split>
+            <span class="line"><span>Let's build</span></span>
+            <span class="line"><span style="--d:.1s">something <em>good.</em></span></span>
+        </h2>
+
+        <a class="contact-mail" href="mailto:pongsiri@codepassion.co" data-reveal>
+            <span>pongsiri@codepassion.co</span>
+            <span class="contact-mail-arrow" aria-hidden="true">→</span>
+        </a>
+
+        <div class="contact-row" data-reveal>
+            <ul class="contact-links">
+                {links.map((l) => (
+                    <li>
+                        <a href={l.href} target={l.href.startsWith('http') ? '_blank' : undefined} rel={l.href.startsWith('http') ? 'noopener noreferrer' : undefined}>
+                            {l.label} <span aria-hidden="true">↗</span>
+                        </a>
+                    </li>
+                ))}
+            </ul>
+            <a href="/Pongsiri_Pisutakarathada_CV.pdf" download="Pongsiri_Pisutakarathada_CV.pdf" class="btn no-print">
+                Download CV
+                <span class="mono cv-meta">PDF</span>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v12M6 11l6 6 6-6M5 20h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
         </div>
     </div>
+
+    <footer class="wrap site-foot mono">
+        <span>© {year} Pongsiri Pisutakarathada</span>
+        <span>Bangkok, Thailand</span>
+        <a href="#hero" class="no-print">Back to top ↑</a>
+    </footer>
 </section>
 
-<script>
-    document.getElementById('download-cv-btn')?.addEventListener('click', () => {
-        window.print();
-    });
-</script>
+<style>
+    .contact { padding-bottom: 32px; }
+    .contact-title {
+        font-size: clamp(60px, 11vw, 184px);
+        line-height: 0.9;
+        letter-spacing: -0.035em;
+        margin: 24px 0 clamp(40px, 6vw, 72px);
+    }
+    .contact-mail {
+        display: inline-flex;
+        align-items: center;
+        gap: 20px;
+        font-size: clamp(22px, 3.4vw, 44px);
+        letter-spacing: -0.02em;
+        font-weight: 300;
+        border-bottom: 1px solid var(--line-2);
+        padding-bottom: 10px;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        transition: border-color 0.4s var(--ease), color 0.4s var(--ease);
+    }
+    .contact-mail:hover { color: var(--coral); border-color: var(--coral); }
+    .contact-mail-arrow { transition: transform 0.5s var(--ease); }
+    .contact-mail:hover .contact-mail-arrow { transform: translateX(8px); }
+
+    .contact-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        margin-top: clamp(48px, 7vw, 96px);
+    }
+    .contact-links { list-style: none; display: flex; flex-wrap: wrap; gap: 28px; margin: 0; padding: 0; }
+    .contact-links a { color: var(--ink-2); transition: color 0.3s; }
+    .contact-links a:hover { color: var(--coral); }
+
+    .cv-meta {
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        border: 1px solid var(--line-2);
+        color: var(--muted);
+    }
+    .site-foot {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: clamp(80px, 12vw, 160px);
+        padding-top: 20px;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+    }
+    .site-foot a:hover { color: var(--ink); }
+</style>

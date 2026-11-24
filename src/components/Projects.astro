@@ -1,86 +1,169 @@
 ---
-// Projects Carousel Section
+// Selected projects — cards with pointer-tracked tilt and glow.
 const projects = [
     {
-        icon: "fas fa-layer-group",
-        title: "Sekweb.site",
-        description: "Architecture for AI website builder (Jul 2023).",
-        tag: "AI Platform"
+        title: 'WorkEngine',
+        year: 'Code Passion',
+        tag: 'AI Platform',
+        description: 'AI-assisted operational management platform that also serves as the starter for every C9N project.',
+        hue: 'coral',
     },
     {
-        icon: "fas fa-heartbeat",
-        title: "Thai Survive",
-        description: "Donation management for crisis relief (Sep 2021).",
-        tag: "Social Impact"
+        title: 'c9n CLI & Skills',
+        year: 'Code Passion',
+        tag: 'Developer Tooling',
+        description: 'The team\'s conventions packaged as AI agent Skills, plus a CLI that installs them and runs guarded, tag-based deployments.',
+        hue: 'teal',
     },
     {
-        icon: "fas fa-graduation-cap",
-        title: "Forenext",
-        description: "Enterprise Learning Management System (Aug 2012).",
-        tag: "EdTech"
+        title: 'MemberConnex',
+        year: 'Code Passion',
+        tag: 'LINE Platform',
+        description: 'Membership platform for associations on LINE LIFF, with role administration and a product landing page.',
+        hue: 'teal',
     },
     {
-        icon: "fas fa-layer-group",
-        title: "Sekweb.site",
-        description: "Architecture for AI website builder.",
-        tag: "AI Platform"
+        title: 'Sek Web',
+        year: 'Jul 2023',
+        tag: 'AI Website Builder',
+        description: 'Website builder with AI at sekweb.site.',
+        hue: 'coral',
     },
     {
-        icon: "fas fa-heartbeat",
-        title: "Thai Survive",
-        description: "Donation management for crisis relief.",
-        tag: "Social Impact"
-    }
+        title: 'Thai Survive',
+        year: 'Sep 2021 – now',
+        tag: 'Social Impact',
+        description: 'Donation and crisis-management platform for COVID-19 patients and flood victims.',
+        hue: 'coral',
+    },
+    {
+        title: 'Forenext',
+        year: 'Earlier work',
+        tag: 'EdTech',
+        description: 'Enterprise learning management system.',
+        hue: 'teal',
+    },
 ];
 ---
 
-<section id="projects" class="section-screen scroll-mt-28 overflow-hidden pt-10 pb-20">
-    <h2 class="text-3xl font-bold mb-8 text-[#1d1d1f] tracking-tight text-center">Projects & Innovations</h2>
-    <div class="carousel-container" id="draggable-carousel">
-        <div class="carousel-track">
-            {projects.map(project => (
-                <div class="project-card">
-                    <div class="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-600 mb-6 border border-slate-200">
-                        <i class={`${project.icon} text-xl text-slate-600`}></i>
+<section id="projects" class="section">
+    <div class="wrap">
+        <div class="section-head">
+            <p class="eyebrow" data-reveal>Selected projects</p>
+            <h2 class="display h2" data-split>
+                <span class="line"><span>Things I've</span></span>
+                <span class="line"><span style="--d:.1s"><em>helped ship.</em></span></span>
+            </h2>
+        </div>
+
+        <div class="proj-grid">
+            {projects.map((p, i) => (
+                <div data-reveal style={`--d:${i * 0.08}s`}>
+                <article class={`proj proj--${p.hue}`} data-tilt>
+                    <div class="proj-glow" aria-hidden="true"></div>
+                    <div class="proj-top mono">
+                        <span>{String(i + 1).padStart(2, '0')}</span>
+                        <span>{p.year}</span>
                     </div>
-                    <h4 class="text-xl font-bold text-[#1d1d1f] mb-2">{project.title}</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed mb-4">{project.description}</p>
-                    <span class="inline-block px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded-full border border-slate-200">{project.tag}</span>
+                    <h3 class="proj-title">{p.title}</h3>
+                    <p class="proj-desc">{p.description}</p>
+                    <span class="proj-tag mono">{p.tag}</span>
+                </article>
                 </div>
             ))}
         </div>
     </div>
 </section>
 
-<script>
-    // Draggable carousel logic
-    const slider = document.querySelector('.carousel-container');
-    let isDown = false;
-    let startX: number;
-    let scrollLeft: number;
+<style>
+    .proj-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+        perspective: 1200px;
+    }
+    @media (min-width: 760px) { .proj-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; } }
+    @media (min-width: 1100px) { .proj-grid { grid-template-columns: repeat(3, 1fr); } }
 
-    slider?.addEventListener('mousedown', (e) => {
-        isDown = true;
-        slider.classList.add('active');
-        startX = (e as MouseEvent).pageX - (slider as HTMLElement).offsetLeft;
-        scrollLeft = slider.scrollLeft;
-    });
-    
-    slider?.addEventListener('mouseleave', () => {
-        isDown = false;
-        slider.classList.remove('active');
-    });
-    
-    slider?.addEventListener('mouseup', () => {
-        isDown = false;
-        slider.classList.remove('active');
-    });
-    
-    slider?.addEventListener('mousemove', (e) => {
-        if(!isDown) return;
-        e.preventDefault();
-        const x = (e as MouseEvent).pageX - (slider as HTMLElement).offsetLeft;
-        const walk = (x - startX) * 2;
-        slider.scrollLeft = scrollLeft - walk;
-    });
+    .proj-grid > div { display: flex; perspective: 1200px; }
+    .proj {
+        flex: 1;
+        --rx: 0deg;
+        --ry: 0deg;
+        --mx: 50%;
+        --my: 50%;
+        position: relative;
+        overflow: hidden;
+        min-height: clamp(280px, 28vw, 380px);
+        padding: clamp(24px, 3vw, 40px);
+        border-radius: 24px;
+        border: 1px solid var(--line);
+        background: linear-gradient(160deg, var(--bg-3), var(--bg-2) 60%);
+        display: flex;
+        flex-direction: column;
+        transform: rotateX(var(--rx)) rotateY(var(--ry));
+        transform-style: preserve-3d;
+        transition: transform 0.6s var(--ease), border-color 0.4s var(--ease);
+    }
+    .proj:hover { border-color: var(--line-2); }
+    .proj-glow {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.5s var(--ease);
+        background: radial-gradient(420px circle at var(--mx) var(--my), var(--glow), transparent 60%);
+    }
+    .proj--coral { --glow: rgba(255, 107, 74, 0.18); }
+    .proj--teal { --glow: rgba(46, 196, 182, 0.18); }
+    .proj:hover .proj-glow { opacity: 1; }
+
+    .proj-top { display: flex; justify-content: space-between; color: var(--muted); position: relative; }
+    .proj-title {
+        position: relative;
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: clamp(40px, 4vw, 60px);
+        line-height: 0.95;
+        letter-spacing: -0.025em;
+        margin: auto 0 16px;
+        padding-top: 48px;
+        transform: translateZ(40px);
+    }
+    @media (max-width: 759px) {
+        .proj { min-height: 0; }
+        .proj-title { padding-top: 28px; }
+    }
+    .proj-desc { position: relative; color: var(--ink-2); max-width: 40ch; margin: 0 0 24px; transform: translateZ(24px); }
+    .proj-tag {
+        position: relative;
+        align-self: flex-start;
+        padding: 6px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line-2);
+        color: var(--ink-2);
+    }
+</style>
+
+<script>
+    // Pointer tilt + glow position. Skipped for touch and reduced motion.
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (fine && !reduce) {
+        document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((card) => {
+            card.addEventListener('pointermove', (e) => {
+                const r = card.getBoundingClientRect();
+                const x = (e.clientX - r.left) / r.width;
+                const y = (e.clientY - r.top) / r.height;
+                card.style.setProperty('--ry', `${(x - 0.5) * 8}deg`);
+                card.style.setProperty('--rx', `${(0.5 - y) * 8}deg`);
+                card.style.setProperty('--mx', `${x * 100}%`);
+                card.style.setProperty('--my', `${y * 100}%`);
+            });
+            card.addEventListener('pointerleave', () => {
+                card.style.setProperty('--rx', '0deg');
+                card.style.setProperty('--ry', '0deg');
+            });
+        });
+    }
 </script>
