@@ -4,12 +4,15 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        inter: ['Inter', 'sans-serif'],
+        display: ['"Instrument Serif"', '"Noto Serif Thai"', 'Georgia', 'serif'],
+        sans: ['Geist', '"IBM Plex Sans Thai"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['"Geist Mono"', 'ui-monospace', 'monospace'],
       },
       colors: {
-        accent: '#0071e3',
-        primary: '#1d1d1f',
-        secondary: '#86868b',
+        ink: '#f2efe9',
+        night: '#07080a',
+        coral: '#ff6b4a',
+        teal: '#2ec4b6',
       },
     },
   },

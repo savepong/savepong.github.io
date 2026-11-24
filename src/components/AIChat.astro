@@ -1,84 +1,305 @@
 ---
-// AI Chat Component - Floating chat panel with Gemini integration
-// API key is loaded from environment variables for security
+// AI Chat — "Ask my AI" section plus floating chat panel (Gemini).
+// API key is loaded from environment variables (PUBLIC_GEMINI_API_KEY).
 ---
 
-<!-- FLOATING AI WIDGET -->
-<div id="floating-chat-btn" class="floating-btn">
-    <!-- Gemini SVG Icon -->
-    <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-    </svg>
-</div>
-
-<div id="floating-chat-panel" class="floating-chat-panel">
-    <div class="p-4 border-b border-slate-100/50 flex justify-between items-center bg-white/60 backdrop-blur-md">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-500 to-purple-600 flex items-center justify-center text-white shadow-lg">
-                <!-- Gemini SVG Icon -->
-                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
-                </svg>
-            </div>
-            <div>
-                <h3 class="font-bold text-sm">Gemini Assistant</h3>
-                <p class="text-[10px] text-slate-500 font-medium">Model 2.5 Flash</p>
-            </div>
-        </div>
-        <button id="close-chat-btn" class="w-8 h-8 rounded-full hover:bg-slate-100 flex items-center justify-center text-slate-500 transition-colors">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-    <div id="chat-container" class="flex-1 p-4 overflow-y-auto chat-container flex flex-col gap-2 bg-transparent">
-        <div class="chat-bubble-ai shadow-sm text-sm">Hello! I am Pongsiri's AI assistant. Ask me anything.</div>
-    </div>
-    <div class="p-4 bg-white/50 border-t border-slate-100/50 backdrop-blur-sm">
-        <div class="relative">
-            <input type="text" id="chat-input" placeholder="Type a message..." class="w-full bg-white border-none rounded-full py-3 px-5 text-sm focus:ring-2 focus:ring-slate-300 outline-none transition-all placeholder-slate-400 shadow-sm">
-            <button id="send-btn" class="absolute right-1 top-1 w-8 h-8 bg-slate-800 text-white rounded-full flex items-center justify-center hover:bg-black transition-colors shadow-md mt-0.5">
-                <i class="fas fa-arrow-up text-xs"></i>
-            </button>
-        </div>
-    </div>
-</div>
-
 <!-- Ask My AI Section -->
-<section id="ai" class="min-h-screen flex flex-col justify-center items-center relative py-20">
-    <div class="text-center mb-10">
-        <h3 class="text-4xl font-bold text-[#1d1d1f] mb-4">Ask My AI</h3>
-        <p class="text-lg text-slate-500 font-light">Powered by Gemini 2.5 Flash.</p>
-    </div>
-    <div class="max-w-2xl mx-auto w-full">
-        <div class="relative group">
-            <input type="text" id="chat-input-bento" placeholder="Ask anything about Pongsiri..." class="w-full bg-white/60 backdrop-blur-xl border border-white/60 rounded-2xl px-6 py-5 text-base focus:outline-none focus:border-blue-400 focus:ring-4 focus:ring-blue-50/50 shadow-sm transition-all">
-            <button id="open-chat-from-bento" class="absolute right-3 top-3 bg-black text-white rounded-xl w-12 h-12 flex items-center justify-center hover:bg-[#0071e3] transition-colors shadow-md">
-                <i class="fas fa-arrow-right text-sm"></i>
+<section id="ask" class="section ask">
+    <div class="wrap ask-inner">
+        <p class="eyebrow" data-reveal>Ask my AI</p>
+        <h2 class="display h2 ask-title" data-split>
+            <span class="line"><span>Curious? <em>Just ask.</em></span></span>
+        </h2>
+        <p class="ask-sub" data-reveal>An assistant that knows my work history. Answers in Thai, powered by Gemini 2.5 Flash.</p>
+
+        <div class="ask-field" data-reveal>
+            <label for="chat-input-bento" class="sr-only">Ask anything about Pongsiri</label>
+            <input type="text" id="chat-input-bento" placeholder="What does Pongsiri work on at Code Passion?" autocomplete="off">
+            <button id="open-chat-from-bento" aria-label="Ask">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
         </div>
     </div>
 </section>
 
+<!-- FLOATING AI WIDGET -->
+<button id="floating-chat-btn" class="chat-fab" aria-label="Open AI chat" aria-controls="floating-chat-panel">
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+    </svg>
+</button>
+
+<div id="floating-chat-panel" class="chat-panel" role="dialog" aria-label="AI assistant">
+    <div class="chat-head">
+        <div class="chat-id">
+            <span class="chat-avatar" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            </span>
+            <div>
+                <h3>Pongsiri's assistant</h3>
+                <p class="mono">Gemini 2.5 Flash</p>
+            </div>
+        </div>
+        <button id="close-chat-btn" class="chat-close" aria-label="Close chat">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </button>
+    </div>
+    <div id="chat-container" class="chat-container">
+        <div class="chat-bubble-ai">Hello! I am Pongsiri's AI assistant. Ask me anything.</div>
+    </div>
+    <div class="chat-foot">
+        <label for="chat-input" class="sr-only">Message</label>
+        <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+        <button id="send-btn" aria-label="Send">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+    </div>
+</div>
+
+<style>
+    .ask { overflow: hidden; }
+    .ask::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 60%;
+        width: min(900px, 120vw);
+        aspect-ratio: 2 / 1;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(ellipse at center, rgba(255, 107, 74, 0.14), rgba(46, 196, 182, 0.08) 40%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+    }
+    .ask-inner { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+    .ask-title { margin: 20px 0 20px; }
+    .ask-sub { color: var(--ink-2); margin: 0 0 48px; max-width: 46ch; }
+    .ask-field {
+        width: 100%;
+        max-width: 720px;
+        position: relative;
+    }
+    .ask-field input {
+        width: 100%;
+        height: 72px;
+        padding: 0 84px 0 28px;
+        border-radius: 999px;
+        border: 1px solid var(--line-2);
+        background: rgba(18, 20, 25, 0.7);
+        backdrop-filter: blur(12px);
+        color: var(--ink);
+        font: inherit;
+        font-size: 17px;
+        outline: none;
+        transition: border-color 0.3s var(--ease), box-shadow 0.3s var(--ease);
+    }
+    .ask-field input::placeholder { color: var(--muted); }
+    .ask-field input:focus { border-color: var(--coral); box-shadow: 0 0 0 6px rgba(255, 107, 74, 0.12); }
+    .ask-field button {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        border: 0;
+        background: var(--ink);
+        color: var(--bg);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+    }
+    .ask-field button:hover { background: var(--coral); transform: rotate(-12deg); }
+    .ask-field button svg { width: 20px; height: 20px; }
+</style>
+
+<style is:global>
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .chat-fab {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 90;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 1px solid var(--line-2);
+        background: rgba(18, 20, 25, 0.85);
+        backdrop-filter: blur(12px);
+        color: var(--ink);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        transition: transform 0.4s var(--ease), background 0.3s, color 0.3s;
+    }
+    .chat-fab svg { width: 26px; height: 26px; }
+    .chat-fab:hover { transform: scale(1.06); background: var(--coral); color: var(--bg); }
+    .chat-fab.active { transform: rotate(45deg); background: var(--coral); color: var(--bg); }
+
+    .chat-panel {
+        position: fixed;
+        right: 20px;
+        bottom: 96px;
+        z-index: 95;
+        width: min(390px, calc(100vw - 32px));
+        height: min(600px, 75vh);
+        display: flex;
+        flex-direction: column;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid var(--line-2);
+        background: rgba(12, 13, 16, 0.92);
+        backdrop-filter: blur(24px) saturate(140%);
+        -webkit-backdrop-filter: blur(24px) saturate(140%);
+        box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+        opacity: 0;
+        transform: translateY(16px) scale(0.97);
+        pointer-events: none;
+        visibility: hidden;
+        transition: opacity 0.35s var(--ease), transform 0.35s var(--ease), visibility 0.35s;
+    }
+    .chat-panel.active { opacity: 1; transform: none; pointer-events: all; visibility: visible; }
+    @media (max-width: 480px) { .chat-panel { right: 16px; } .chat-fab { right: 16px; bottom: 16px; } }
+
+    .chat-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--line);
+    }
+    .chat-id { display: flex; align-items: center; gap: 12px; }
+    .chat-id h3 { margin: 0; font-size: 15px; font-weight: 500; }
+    .chat-id p { margin: 0; color: var(--muted); font-size: 11px; }
+    .chat-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        background: var(--grad);
+        color: var(--bg);
+        display: grid;
+        place-items: center;
+    }
+    .chat-avatar svg { width: 20px; height: 20px; }
+    .chat-close {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 0;
+        background: transparent;
+        color: var(--ink-2);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+    }
+    .chat-close:hover { background: var(--bg-3); color: var(--ink); }
+    .chat-close svg { width: 18px; height: 18px; }
+
+    .chat-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        scrollbar-width: none;
+    }
+    .chat-container::-webkit-scrollbar { display: none; }
+    .chat-bubble-user,
+    .chat-bubble-ai {
+        max-width: 85%;
+        padding: 10px 16px;
+        font-size: 14px;
+        line-height: 1.55;
+    }
+    .chat-bubble-user {
+        margin-left: auto;
+        background: var(--ink);
+        color: var(--bg);
+        border-radius: 18px 18px 4px 18px;
+    }
+    .chat-bubble-ai {
+        margin-right: auto;
+        background: var(--bg-3);
+        color: var(--ink);
+        border: 1px solid var(--line);
+        border-radius: 18px 18px 18px 4px;
+    }
+    .chat-dots { display: inline-flex; gap: 4px; }
+    .chat-dots i {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--ink-2);
+        animation: chatdot 1s ease-in-out infinite;
+    }
+    .chat-dots i:nth-child(2) { animation-delay: 0.15s; }
+    .chat-dots i:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes chatdot { 50% { opacity: 0.25; transform: translateY(-2px); } }
+
+    .chat-foot { position: relative; padding: 14px; border-top: 1px solid var(--line); }
+    .chat-foot input {
+        width: 100%;
+        height: 46px;
+        padding: 0 54px 0 18px;
+        border-radius: 999px;
+        border: 1px solid var(--line-2);
+        background: var(--bg-2);
+        color: var(--ink);
+        font: inherit;
+        font-size: 14px;
+        outline: none;
+    }
+    .chat-foot input:focus { border-color: var(--coral); }
+    .chat-foot button {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 0;
+        background: var(--ink);
+        color: var(--bg);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+    }
+    .chat-foot button:hover { background: var(--coral); }
+    .chat-foot button svg { width: 16px; height: 16px; }
+</style>
+
 <script define:vars={{ apiKey: import.meta.env.PUBLIC_GEMINI_API_KEY || '' }}>
     // CV Context for AI
     const cvContext = `
-    Pongsiri Pisutakarathada (savepong). 
-    Current Roles: CTO & Co-founder at Code Passion, President of Thai Programmer Association (200k+ members).
-    Experience: 
-    - Lead Software Engineer at LSEG/Refinitiv (Managed 20 engineers, MS365 integration).
-    - Senior Developer at Course Square (LMS, API Gateway).
-    - CTO at Ideagital Co., Ltd. (2016-2021) - Managed cloud infra, web apps.
-    - Lead Software Engineer at Jinue Global (2015-2016) - E-commerce & stock systems.
-    - Computer Teacher at Dusit Commercial College (2012-2016) - IT Consultancy.
-    
-    Projects:
-    - WorkEngine: AI operational platform.
-    - Sekweb.site: AI website builder.
-    - Thai Survive: Donation/Crisis management (COVID/Flood).
-    - Forenext: Enterprise LMS.
+    Pongsiri Pisutakarathada (savepong). Based in Bangkok.
+    Summary: Co-founder and CTO of Code Passion, a software company in Bangkok, and former President, now committee member, of the Thai Programmer Association (200,000+ members). Building software since 2012, as a teacher, engineer, lead and founder. Previously Lead Software Engineer at London Stock Exchange Group, leading 20 engineers on financial software. Now focused on AI-assisted engineering: agent Skills, spec-driven delivery (ISO/IEC 29110) and shared CI/CD that let a small team ship regulated and LINE-based systems.
+    Public service: subcommittee overseeing depa (strategy & digital economy promotion); Cyber Scout Thailand steering committee; Phra Nakhon District working group (BMA); Thai Website Standards working group (Digital Council of Thailand).
+    Experience:
+    - CTO & Co-founder, Code Passion (Jan 2020 - present): technology roadmap, engineering standards, AI agent Skills and the c9n CLI, WorkEngine platform (Bun, ElysiaJS, Next.js, Supabase, Turborepo), client systems in fintech, e-commerce, CRM and LINE platforms.
+    - President, Thai Programmer Association (Oct 2023 - Mar 2026), now Committee Member: MOU with Alibaba Cloud, partnerships with depa and NIA, National Coding Day, AI symposiums.
+    - Lead Software Engineer, LSEG (Oct 2021 - Apr 2024): led 20 engineers; integrated Refinitiv data with Microsoft 365 and Google Workspace.
+    - Senior Software Engineer, Refinitiv (2021): Microsoft Office 365 add-ins.
+    - Senior Software Developer, Course Square (2019-2021): architecture, Kong API Gateway.
+    - CTO & Co-founder, Ideagital (2016-2021).
+    - Lead Software Engineer, Jinue Global (2015-2016): e-commerce and stock systems.
+    - Computer & Programming Teacher, Dusit Commercial College (2012-2016): built Saalee.com classroom system.
 
-    Skills: AI Integration (Claude Code, Gemini, OpenAI), Cloud (AWS, Azure, GCP, Alibaba), TypeScript, Node.js, React, Vue.
-    Achievements: Signed MOU with Alibaba Cloud, Speaker at Microsoft Build & Google I/O.
-    Education: MBA (Strategic Management), BBA (Information Systems - First Class Honors), WCAG 2.2 Certified, Azure Fundamentals.
+    Projects: WorkEngine (AI operational platform), c9n CLI & agent Skills, MemberConnex (LINE LIFF membership platform), Sek Web (AI website builder, 2023), Thai Survive (donation/crisis platform for COVID-19 and floods, 2021-present), Forenext (enterprise LMS).
+
+    Skills: TypeScript, Bun, Node.js, ElysiaJS, Next.js, Astro, React, Vue, Supabase, PostgreSQL, Firebase, AWS, Azure, GCP, Alibaba Cloud, Cloudflare Workers, Vercel, Docker, Coolify, GitHub Actions, Claude Code and agent Skills, Gemini, OpenAI, n8n, LINE LIFF.
+    Speaking: Microsoft Build and Google I/O; Thailand Developer Trends 2023 (GitHub Universe After Party, Bangkok); Gosoft; career talks.
+    Education: MBA in Strategic Management, Rattana Bundit University (2018-2020); BBA in Information Systems, Rajamangala University of Technology Tawan-ok (First-Class Honors). Certifications: WCAG 2.2, Azure Fundamentals, SAFe 5 Agilist, AWS with Terraform.
+    Contact: pongsiri@codepassion.co. CV PDF downloadable on the site.
     `;
 
     // Toggle Chat Function
@@ -87,6 +308,9 @@
         const btn = document.getElementById('floating-chat-btn');
         panel?.classList.toggle('active');
         btn?.classList.toggle('active');
+        if (panel?.classList.contains('active')) {
+            document.getElementById('chat-input')?.focus();
+        }
     }
 
     // Gemini API Call
@@ -94,13 +318,13 @@
         if (!apiKey) {
             return "API key not configured. Please set PUBLIC_GEMINI_API_KEY in your .env file.";
         }
-        
+
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
         const payload = {
             contents: [{ parts: [{ text: prompt }] }],
             systemInstruction: { parts: [{ text: systemInstruction }] }
         };
-        
+
         for (let i = 0; i < 3; i++) {
             try {
                 const response = await fetch(url, {
@@ -135,16 +359,16 @@
         const chatInput = document.getElementById('chat-input');
         const text = chatInput?.value.trim();
         if (!text) return;
-        
+
         addBubble(text, 'user');
         chatInput.value = '';
-        
+
         const loadingId = 'loading-' + Date.now();
-        addBubble('<i class="fas fa-circle-notch fa-spin"></i> Thinking...', 'ai', loadingId);
-        
+        addBubble('<span class="chat-dots" aria-label="Thinking"><i></i><i></i><i></i></span>', 'ai', loadingId);
+
         const systemPrompt = `You are Pongsiri's AI assistant. Answer briefly and professionally in Thai. Context: ${cvContext}`;
         const response = await callGemini(text, systemPrompt);
-        
+
         const loadingEl = document.getElementById(loadingId);
         if (loadingEl) loadingEl.remove();
         addBubble(response, 'ai');

@@ -1,50 +1,75 @@
 ---
-// Education & Credentials Section
+// Education & credentials — compact two-column index.
 const academics = [
-    { degree: "M.B.A.", school: "Rattana Bundit University • 2021" },
-    { degree: "B.B.A. Info Systems", school: "Rajamangala University • First-Class Honors" }
+    { title: 'M.B.A., Strategic Management', detail: 'Rattana Bundit University', meta: '2018 – 2020' },
+    { title: 'B.B.A., Information Systems', detail: 'Rajamangala University of Technology Tawan-ok · First-Class Honors', meta: '2013 – 2014' },
 ];
 
 const certifications = [
-    { icon: "fas fa-universal-access", title: "WCAG 2.2 for Web Developers", issuer: "Udemy • Dec 2024" },
-    { icon: "fab fa-microsoft", title: "Azure Fundamentals", issuer: "Microsoft • 2023" },
-    { icon: "fas fa-tasks", title: "SAFe® 5 Agilist", issuer: "Scaled Agile • 2021" }
+    { title: 'WCAG 2.2 for Web Developers', detail: 'Udemy', meta: 'Dec 2024' },
+    { title: 'Azure Fundamentals', detail: 'Microsoft', meta: '2023' },
+    { title: 'Dev Environment in AWS with Terraform', detail: 'LinkedIn Learning', meta: 'Jan 2022' },
+    { title: 'Certified SAFe® 5 Agilist', detail: 'Scaled Agile, Inc.', meta: 'Dec 2021' },
+];
+
+const speaking = [
+    { title: 'Microsoft Build & Google I/O', detail: 'Speaker', meta: '' },
+    { title: 'Thailand Developer Trends 2023', detail: 'GitHub Universe After Party, Bangkok', meta: '2023' },
+    { title: 'Building the Digital Future', detail: 'Next-gen software development & cyber security, Gosoft', meta: '' },
+    { title: 'Career talks', detail: 'Digital Skill Live, BUSIT, LearnCloud', meta: '' },
+];
+
+const groups = [
+    { label: 'Academic', items: academics },
+    { label: 'Certifications', items: certifications },
+    { label: 'Speaking', items: speaking },
 ];
 ---
 
-<section id="education" class="section-screen scroll-mt-28">
-    <h2 class="text-3xl font-bold mb-12 text-[#1d1d1f] tracking-tight text-center">Education & Credentials</h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto w-full">
-        <div class="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm">
-            <h3 class="text-lg font-bold text-[#1d1d1f] mb-6 flex items-center gap-2">
-                <i class="fas fa-graduation-cap text-slate-600"></i> Academic
-            </h3>
-            <div class="space-y-6">
-                {academics.map(edu => (
-                    <div>
-                        <h4 class="text-base font-bold text-[#1d1d1f]">{edu.degree}</h4>
-                        <p class="text-slate-500 text-sm">{edu.school}</p>
-                    </div>
-                ))}
-            </div>
+<section id="education" class="section">
+    <div class="wrap">
+        <div class="section-head">
+            <p class="eyebrow" data-reveal>Credentials &amp; talks</p>
+            <h2 class="display h2" data-split>
+                <span class="line"><span>Learning in <em>public.</em></span></span>
+            </h2>
         </div>
-        <div class="p-8 rounded-3xl bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm">
-            <h3 class="text-lg font-bold text-[#1d1d1f] mb-6 flex items-center gap-2">
-                <i class="fas fa-certificate text-slate-600"></i> Certifications
-            </h3>
-            <div class="space-y-4">
-                {certifications.map(cert => (
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm text-slate-600">
-                            <i class={`${cert.icon} text-slate-600`}></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-[#1d1d1f] text-sm">{cert.title}</h4>
-                            <p class="text-xs text-slate-500">{cert.issuer}</p>
-                        </div>
-                    </div>
-                ))}
-            </div>
+
+        <div class="cred-grid">
+            {groups.map((g, gi) => (
+                <div data-reveal style={`--d:${gi * 0.1}s`}>
+                    <h3 class="cred-label mono">{g.label}</h3>
+                    <ul class="cred-list">
+                        {g.items.map((item) => (
+                            <li class="cred">
+                                <span class="cred-title">{item.title}</span>
+                                <span class="cred-detail">{item.detail}</span>
+                                <span class="cred-meta mono">{item.meta}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            ))}
         </div>
     </div>
 </section>
+
+<style>
+    .cred-grid { display: grid; grid-template-columns: 1fr; gap: 56px; }
+    @media (min-width: 760px) { .cred-grid { grid-template-columns: 1fr 1fr; gap: 48px; } }
+    @media (min-width: 1100px) { .cred-grid { grid-template-columns: repeat(3, 1fr); gap: 40px; } }
+    .cred-label { color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 400; margin: 0 0 16px; }
+    .cred-list { list-style: none; margin: 0; padding: 0; }
+    .cred {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas: 'title meta' 'detail meta';
+        gap: 4px 16px;
+        padding: 20px 0;
+        border-top: 1px solid var(--line);
+    }
+    .cred:last-child { border-bottom: 1px solid var(--line); }
+    .cred-title { grid-area: title; font-size: 17px; line-height: 1.4; }
+    .cred-detail { grid-area: detail; color: var(--muted); font-size: 14px; }
+    .cred-meta { grid-area: meta; align-self: start; padding-top: 3px; color: var(--ink-2); text-align: right; white-space: nowrap; }
+</style>

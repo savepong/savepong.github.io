@@ -1,148 +1,243 @@
 ---
 // Blog post page template
 import Layout from '@/layouts/Layout.astro';
+import Navbar from '@/components/Navbar.astro';
 import { getCollection } from 'astro:content';
+import { postCover } from '@/lib/post-cover';
 
 export async function getStaticPaths() {
-    const posts = await getCollection('blog');
-    return posts.map(post => ({
+    const posts = (await getCollection('blog'))
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+    return posts.map((post, i) => ({
         params: { slug: post.slug },
-        props: { post },
+        props: {
+            post,
+            newer: i > 0 ? { slug: posts[i - 1].slug, title: posts[i - 1].data.title } : null,
+            older: i < posts.length - 1 ? { slug: posts[i + 1].slug, title: posts[i + 1].data.title } : null,
+        },
     }));
 }
 
-const { post } = Astro.props;
+const { post, newer, older } = Astro.props;
 const { Content } = await post.render();
+
+const cover = postCover(post);
+
+const date = new Date(post.data.pubDate).toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
-<Layout title={`${post.data.title} | Pongsiri P.`} description={post.data.description}>
-    <article class="min-h-screen pt-24 pb-16 px-6">
-        <div class="max-w-3xl mx-auto">
-            <a href="/blog" class="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 transition-colors mb-8">
-                <i class="fas fa-arrow-left"></i>
-                Back to Blog
-            </a>
-            
-            <!-- White background container for content -->
-            <div class="bg-white rounded-2xl shadow-lg p-8 md:p-12">
-                <header class="mb-12">
-                    <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-[#1d1d1f] mb-4 leading-tight">{post.data.title}</h1>
-                    <div class="flex flex-wrap items-center gap-4 text-sm text-slate-500">
-                        <time>
-                            {new Date(post.data.pubDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-                        </time>
-                        {post.data.author && (
-                            <span>by {post.data.author}</span>
-                        )}
-                    </div>
-                    {post.data.tags && (
-                        <div class="flex flex-wrap gap-2 mt-6">
-                            {post.data.tags.map((tag: string) => (
-                                <span class="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-medium rounded-full">{tag}</span>
-                            ))}
-                        </div>
-                    )}
-                </header>
-                
-                <div class="prose prose-lg prose-slate max-w-none">
-                    <Content />
-                </div>
+<Layout title={`${post.data.title} — Pongsiri Pisut.`} description={post.data.description} lang="th" image={cover?.src}>
+    <Navbar />
+    <article class="post-page" id="main">
+        <div class="post-wrap">
+            <a href="/blog" class="back mono">← All writing</a>
 
-                <!-- Author Profile Section -->
-                {post.data.author && (
-                    <div class="mt-16 pt-8 border-t border-slate-200">
-                        <div class="flex items-start gap-6">
-                            <div class="flex-shrink-0">
-                                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-[#0071e3] to-[#5e5ce6] flex items-center justify-center text-white text-2xl font-bold shadow-lg" role="img" aria-label={`${post.data.author} avatar`}>
-                                    {post.data.author.split(' ').filter((n: string) => n.length > 0).map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
-                                </div>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="text-xl font-bold text-[#1d1d1f] mb-2">About the Author</h3>
-                                <p class="text-lg font-semibold text-slate-700 mb-3">{post.data.author}</p>
-                                <p class="text-slate-600 leading-relaxed mb-4">
-                                    Tech Executive & Community Leader. Passionate about building great products, leading teams, and sharing knowledge. 
-                                    President of Thai Programmer Association.
-                                </p>
-                                <div class="flex gap-4">
-                                    <a href="https://linkedin.com/in/savepong" target="_blank" rel="noopener noreferrer" 
-                                       class="inline-flex items-center gap-2 text-sm text-[#0071e3] hover:text-[#0077ed] transition-colors font-medium">
-                                        <i class="fab fa-linkedin" aria-hidden="true"></i>
-                                        LinkedIn
-                                    </a>
-                                    <a href="https://github.com/savepong" target="_blank" rel="noopener noreferrer"
-                                       class="inline-flex items-center gap-2 text-sm text-[#0071e3] hover:text-[#0077ed] transition-colors font-medium">
-                                        <i class="fab fa-github" aria-hidden="true"></i>
-                                        GitHub
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+            <header class="post-header">
+                <div class="post-meta mono">
+                    <time datetime={post.data.pubDate.toISOString()}>{date}</time>
+                    {post.data.author && <span>· {post.data.author}</span>}
+                </div>
+                <h1 class="post-h1 thai-safe">{post.data.title}</h1>
+                {post.data.description && <p class="post-dek thai-safe">{post.data.description}</p>}
+                {post.data.tags && (
+                    <div class="post-tags">
+                        {post.data.tags.map((tag: string) => (
+                            <span class="mono">{tag}</span>
+                        ))}
                     </div>
                 )}
+            </header>
+
+            {cover && (
+                <figure class="post-cover">
+                    <div class="post-cover-img">
+                        <img src={cover.src} width="1200" height="630" alt={cover.alt} decoding="async" fetchpriority="high">
+                    </div>
+                    {cover.credit && (
+                        <figcaption class="mono">
+                            <a href={cover.credit.href} target="_blank" rel="noopener noreferrer">{cover.credit.text}</a>
+                        </figcaption>
+                    )}
+                </figure>
+            )}
+
+            <div class="prose">
+                <Content />
             </div>
+
+            {(older || newer) && (
+                <nav class="post-nav" aria-label="More posts">
+                    {older ? (
+                        <a href={`/blog/${older.slug}`} class="post-nav-link">
+                            <span class="mono">← Older</span>
+                            <span class="thai-safe">{older.title}</span>
+                        </a>
+                    ) : <span />}
+                    {newer && (
+                        <a href={`/blog/${newer.slug}`} class="post-nav-link post-nav-link--next">
+                            <span class="mono">Newer →</span>
+                            <span class="thai-safe">{newer.title}</span>
+                        </a>
+                    )}
+                </nav>
+            )}
+
+            {post.data.author && (
+                <aside class="author">
+                    <img src="https://github.com/savepong.png" alt="" width="72" height="72" loading="lazy" class="author-img">
+                    <div>
+                        <p class="mono author-k">About the author</p>
+                        <p class="author-name">{post.data.author}</p>
+                        <p class="author-bio">
+                            CTO &amp; Co-founder of Code Passion and former President of the Thai Programmer Association.
+                            Writes about building products, leading teams and AI tooling.
+                        </p>
+                        <div class="author-links">
+                            <a href="https://linkedin.com/in/savepong" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
+                            <a href="https://github.com/savepong" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+                        </div>
+                    </div>
+                </aside>
+            )}
         </div>
     </article>
 </Layout>
 
+<style>
+    .post-page { padding: clamp(120px, 14vw, 180px) var(--gutter) 120px; }
+    .post-wrap { max-width: 760px; margin: 0 auto; }
+    .back { color: var(--muted); display: inline-block; margin-bottom: 48px; transition: color 0.3s; }
+    .back:hover { color: var(--coral); }
+
+    .post-header { padding-bottom: 40px; }
+    .post-cover { margin: 0 0 56px; }
+    .post-cover-img {
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: var(--bg-2);
+        aspect-ratio: 1200 / 630;
+    }
+    .post-cover-img img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .post-cover figcaption { margin-top: 12px; font-size: 11px; color: var(--muted); }
+    .post-cover figcaption a:hover { color: var(--coral); }
+    @media (min-width: 1100px) {
+        .post-cover { margin-left: -120px; margin-right: -120px; }
+    }
+    .post-meta { color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .post-h1 {
+        margin: 0 0 20px;
+        font-family: var(--font-display);
+        font-weight: 400;
+        font-size: clamp(36px, 5.4vw, 64px);
+        letter-spacing: -0.02em;
+        line-height: 1.4;
+    }
+    .post-dek { margin: 0; color: var(--ink-2); font-size: 19px; }
+    .post-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+    .post-tags span {
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line-2);
+        color: var(--muted);
+        font-size: 11px;
+    }
+
+    .post-nav {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-top: 80px;
+    }
+    @media (min-width: 640px) { .post-nav { grid-template-columns: 1fr 1fr; } }
+    .post-nav-link {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+    }
+    .post-nav-link .mono { color: var(--muted); }
+    .post-nav-link:hover { border-color: var(--line-2); background: var(--bg-2); }
+    .post-nav-link:hover .thai-safe { color: var(--coral); }
+    .post-nav-link--next { text-align: right; }
+    .author {
+        display: flex;
+        gap: 20px;
+        align-items: flex-start;
+        margin-top: 48px;
+        padding-top: 32px;
+        border-top: 1px solid var(--line);
+    }
+    .author-img { width: 72px; height: 72px; border-radius: 50%; flex-shrink: 0; filter: grayscale(0.3); }
+    .author-k { color: var(--muted); margin: 0 0 6px; text-transform: uppercase; letter-spacing: 0.08em; font-size: 11px; }
+    .author-name { margin: 0 0 8px; font-size: 20px; }
+    .author-bio { margin: 0 0 12px; color: var(--ink-2); font-size: 15px; }
+    .author-links { display: flex; gap: 20px; font-size: 14px; }
+    .author-links a { color: var(--ink-2); }
+    .author-links a:hover { color: var(--coral); }
+</style>
+
 <style is:global>
     .prose {
-        color: #334155;
-        line-height: 1.8;
+        color: var(--ink-2);
+        font-size: 18px;
+        line-height: 1.85;
     }
-    .prose h2 {
-        color: #1d1d1f;
-        font-weight: 700;
-        margin-top: 2em;
-        margin-bottom: 1em;
+    .prose > :first-child { margin-top: 0; }
+    .prose h1, .prose h2, .prose h3, .prose h4 {
+        color: var(--ink);
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        line-height: 1.4;
     }
-    .prose h3 {
-        color: #1d1d1f;
-        font-weight: 600;
-        margin-top: 1.5em;
-        margin-bottom: 0.75em;
-    }
-    .prose p {
-        margin-bottom: 1.5em;
-    }
+    .prose h1 { font-size: 1.9em; margin: 1.6em 0 0.6em; }
+    .prose h2 { font-size: 1.5em; margin: 2em 0 0.7em; }
+    .prose h3 { font-size: 1.2em; margin: 1.6em 0 0.6em; }
+    .prose p { margin: 0 0 1.4em; }
     .prose a {
-        color: #0071e3;
-        text-decoration: none;
-    }
-    .prose a:hover {
+        color: var(--ink);
         text-decoration: underline;
+        text-decoration-color: var(--coral);
+        text-underline-offset: 3px;
     }
+    .prose a:hover { color: var(--coral); }
+    .prose strong { color: var(--ink); font-weight: 600; }
     .prose code {
-        background: #f1f5f9;
-        padding: 0.2em 0.4em;
-        border-radius: 0.25em;
-        font-size: 0.9em;
+        font-family: var(--font-mono);
+        font-size: 0.86em;
+        background: var(--bg-3);
+        border: 1px solid var(--line);
+        padding: 0.15em 0.4em;
+        border-radius: 6px;
+        color: var(--ink);
     }
     .prose pre {
-        background: #1e293b;
-        padding: 1.5em;
-        border-radius: 1em;
+        background: var(--bg-2) !important;
+        border: 1px solid var(--line);
+        padding: 1.4em;
+        border-radius: 16px;
         overflow-x: auto;
+        font-size: 0.86em;
+        line-height: 1.65;
+        margin: 0 0 1.6em;
     }
-    .prose pre code {
-        background: transparent;
-        padding: 0;
-        color: #e2e8f0;
-    }
+    .prose pre code { background: transparent; border: 0; padding: 0; }
     .prose blockquote {
-        border-left: 4px solid #0071e3;
-        padding-left: 1em;
-        color: #64748b;
-        font-style: italic;
+        margin: 1.8em 0;
+        padding: 0.2em 0 0.2em 1.2em;
+        border-left: 2px solid var(--coral);
+        color: var(--ink);
+        font-style: normal;
     }
-    .prose ul, .prose ol {
-        padding-left: 1.5em;
-    }
-    .prose li {
-        margin-bottom: 0.5em;
-    }
-    .prose img {
-        border-radius: 1em;
-        margin: 2em 0;
-    }
+    .prose ul, .prose ol { padding-left: 1.4em; margin: 0 0 1.4em; }
+    .prose li { margin-bottom: 0.5em; }
+    .prose li::marker { color: var(--coral); }
+    .prose hr { border: 0; border-top: 1px solid var(--line); margin: 3em 0; }
+    .prose img { max-width: 100%; border-radius: 16px; margin: 2em 0; }
+    .prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.6em; font-size: 0.92em; display: block; overflow-x: auto; }
+    .prose th, .prose td { border-bottom: 1px solid var(--line); padding: 0.7em 0.8em; text-align: left; }
+    .prose th { color: var(--ink); font-weight: 500; }
 </style>
